@@ -1,0 +1,19 @@
+#Header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    padding: 12px 24px;
+    border-bottom: 1px solid black;
+}
+#Header .left a{
+    color: black;
+}
+#Header .right ul{
+    display: flex;
+    gap: 8px;
+}
+#Header .right ul li a{
+    color: black;
+}
