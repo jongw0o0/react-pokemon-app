@@ -5,14 +5,24 @@
     justify-content: space-between;
     height: 50px;
     padding: 12px 24px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid grey;
 }
 #Header .left a{
     color: black;
 }
 #Header .right ul{
     display: flex;
-    gap: 8px;
+    /* gap: 12px; */
+}
+#Header .right ul li::after{
+    content: "";
+    margin-left: 4px;
+    margin-right: 4px;
+    /* border: 1px solid #ccc; */
+}
+#Header .right ul li:last-child::after{
+    content: '';
+    border: none;
 }
 #Header .right ul li a{
     color: black;

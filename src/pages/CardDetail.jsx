@@ -86,13 +86,13 @@ const CardDetail = () => {
                             <p className="content">{card.effect}</p>
                         </div>
                     }
-                    {(card.retreat || card.retreat === 0) &&  
+                    {card.weaknesses && card.weaknesses.length > 0 && 
                         <div>
                             <p className="title">약점</p>
                             <p className="content">{card.weaknesses[0].type} {card.weaknesses[0].value}</p>
                         </div>
                     }
-                    {card.weaknesses && card.weaknesses.length > 0 && 
+                    {(card.retreat || card.retreat === 0) &&  
                         <div>
                             <p className="title">후퇴</p>
                             <p className="content">{card.retreat}</p>

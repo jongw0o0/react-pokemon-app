@@ -33,6 +33,8 @@ const SeriesDetail = ({seriesData, cardSeries}) => {
                         <Link key={cardList.id} to={`/card/${cardList.id}`}>
                             <li>
                                 <img src={`${cardList.image}/high.webp`}/>
+                                <p className="cardName">{cardList.name}</p>
+                                <p className="cardId">{cardList.id}</p>
                             </li>
                         </Link>
                     )}

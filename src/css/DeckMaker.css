@@ -1,0 +1,28 @@
+#DeckMaker{
+    padding-top: 60px;
+    width: 1200px;
+    margin: 0 auto;
+}
+#DeckMaker .newDeck{
+    margin-bottom: 40px;
+}
+#DeckMaker .newDeck h2{
+    margin-bottom: 10px;
+}
+#DeckMaker .newDeck ul{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+#DeckMaker .newDeck ul li{
+    width: 112px;
+    height: 160px;
+    border: 1px dashed #d6d6d6;
+    border-radius: 4%;
+}
+#DeckMaker .searchCard input{
+    border: 1px solid #d6d6d6;
+    border-radius: 4px;
+    line-height: 28px;
+    padding-left: 6px;
+}

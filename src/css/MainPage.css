@@ -1,0 +1,21 @@
+#MainPage{
+    padding-top: 20px;
+}
+#MainPage .title{
+    font-size: 32px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 24px;
+}
+#MainPage .imageSlides{
+    display: flex;
+    width: calc(240px * 20);
+    animation: scroll 100s linear infinite;
+}
+@keyframes scroll{
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-300px * 10)); } /* 원본 카드 10장만큼 이동 */
+}
+#MainPage .imageSlides img{
+    width: 100%;
+}

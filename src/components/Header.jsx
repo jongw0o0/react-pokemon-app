@@ -10,6 +10,8 @@ const Header = () => {
             <div className='right'>
                 <ul>
                     <li><Link to='/series/list'>확장팩</Link></li>
+                    <li><Link to='/deckmaker'>덱 만들기</Link></li>
+                    <li><Link to=''>카드깡 시뮬레이터</Link></li>
                     <li><Link to='/search'>검색</Link></li>
                 </ul>
             </div>
