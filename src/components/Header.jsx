@@ -10,7 +10,7 @@ const Header = () => {
             <div className='right'>
                 <ul>
                     <li><Link to='/series/list'>확장팩</Link></li>
-                    <li><Link to=''>검색</Link></li>
+                    <li><Link to='/search'>검색</Link></li>
                 </ul>
             </div>
         </header>

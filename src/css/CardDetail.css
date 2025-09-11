@@ -1,0 +1,45 @@
+#CardDetail{
+    padding-top: 60px;
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 40px;
+    justify-content: space-between;
+}
+#CardDetail .left{
+    width: 40%;
+}
+#CardDetail .left .imgWrap img{
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+}
+
+#CardDetail .right{
+    width: 60%;
+    align-items: left;
+}
+#CardDetail .right .cardName{
+    font-size: 32px;
+    font-weight: 700;
+}
+#CardDetail .right .cardDesc{
+    font-size: 18px;
+    color: #686868;
+    margin-bottom: 20px;
+}
+#CardDetail .right .cardInfo > div{
+    margin-bottom: 14px;
+}
+#CardDetail .right .cardInfo div .title{
+    font-size: 16px;
+    font-weight: 500;
+}
+#CardDetail .right .cardInfo div .content{
+    color: #686868;
+}
+#CardDetail .right .cardInfo div .content.name{
+    font-size: 15px;
+    font-weight: 500;
+}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import TCGdex from "@tcgdex/sdk";
 import { Header, Footer } from './components';
-import { CardDetail, MainPage } from './pages';
+import { CardDetail, MainPage, SearchPage } from './pages';
 import { SeriesRoutes } from './routes';
 import './App.css'
 
@@ -28,10 +28,6 @@ const App = () => {
   const fetchData = async () => {
     const sdk = new TCGdex('en');
     try {
-
-      const card = await sdk.fetch('cards', 'A1-001');
-      console.log(card);
-
       const series = await sdk.fetch("series", "tcgp");
       setCardSeries(series.sets)
       const setIds = series.sets.map((s) => s.id);
@@ -58,6 +54,7 @@ const App = () => {
         <Routes>
           <Route element={<Layout />} path='/'>
             <Route element={<MainPage seriesData={seriesData} />} index />
+            <Route element={<SearchPage /> } path='/search' />
             <Route element={<SeriesRoutes seriesData={seriesData} cardSeries={cardSeries}/>} path='/series/*' />
             <Route element={<CardDetail /> } path='card/:id' />
           </Route>

@@ -20,8 +20,8 @@ const SeriesList = ({seriesData, cardSeries}) => {
         <div id="SeriesList">
             <ul>
                 {cardSeries.map((set, index) => (
-                    <li className={set.name}>
-                        <button key={set.id}>
+                    <li key={set.id} className={set.name}>
+                        <button>
                             <Link to={`/series/detail/${index}`}>
                                 <img src={`${set.logo}.webp`} alt={set.name} />
                                 <p>{set.name}</p>

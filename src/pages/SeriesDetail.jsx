@@ -30,8 +30,8 @@ const SeriesDetail = ({seriesData, cardSeries}) => {
             <div className="bottom">
                 <ul>
                     {cardLists.map(cardList =>
-                        <Link to={`/card/${cardList.id}`}>
-                            <li key={cardList.id}>
+                        <Link key={cardList.id} to={`/card/${cardList.id}`}>
+                            <li>
                                 <img src={`${cardList.image}/high.webp`}/>
                             </li>
                         </Link>
