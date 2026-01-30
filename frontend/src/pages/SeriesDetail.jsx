@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { TiltCard } from "../components";
 import '../css/SeriesDetail.css'
 
 const SeriesDetail = ({seriesData, cardSeries}) => {
@@ -17,6 +18,9 @@ const SeriesDetail = ({seriesData, cardSeries}) => {
         { id: "A3b", data: seriesData.A3b, index: 8 },
         { id: "A4", data: seriesData.A4, index: 9 },
         { id: "A4a", data: seriesData.A4a, index: 10 },
+        { id: "B1", data: seriesData.B1, index: 11 },
+        { id: "B1a", data: seriesData.B1a, index: 12 },
+        { id: "B2", data: seriesData.B2, index: 13 }
     ];
 
     const cardLists =  seriesSets.find(data => data.index === numId).data
@@ -25,7 +29,7 @@ const SeriesDetail = ({seriesData, cardSeries}) => {
     return(
         <div id="SeriesDetail">
             <div className="top">
-                <img src={`${cardSeries[id].logo}.webp`} alt={cardSeries[0].name}/>
+                <img src={`${cardSeries[id].logo}.webp`} alt={cardSeries[id].name}/>
             </div>
             <div className="bottom">
                 <ul>

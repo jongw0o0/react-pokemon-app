@@ -20,9 +20,22 @@
     border: 1px dashed #d6d6d6;
     border-radius: 4%;
 }
-#DeckMaker .searchCard input{
+#DeckMaker .searchCard{
+    display: flex;
+    align-items: center;
+}
+#DeckMaker .searchCard .searchBar input{
     border: 1px solid #d6d6d6;
     border-radius: 4px;
     line-height: 28px;
     padding-left: 6px;
+    margin-right: 10px;
+}
+#DeckMaker .searchCard .selectOpts select{
+    border: 1px solid #d6d6d6;
+    border-radius: 4px;
+    margin-right: 6px;
+    padding-right: 8px;
+    height: 20px;
+    color: #2e2e2e;
 }

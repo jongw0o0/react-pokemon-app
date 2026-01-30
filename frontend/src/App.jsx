@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import TCGdex from "@tcgdex/sdk";
 import { Header, Footer } from './components';
-import { CardDetail, MainPage, SearchPage, DeckMaker } from './pages';
+import { CardDetail, MainPage, SearchPage, DeckMaker, CardSimulator } from './pages';
 import { SeriesRoutes } from './routes';
 import './App.css'
 
@@ -46,14 +46,13 @@ const App = () => {
 
   if (loading) return <p>Loading Pocket cards...</p>;
   
-  
-
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />} path='/'>
             <Route element={<MainPage seriesData={seriesData} />} index />
+            <Route element={<CardSimulator /> } path='/simulator' />
             <Route element={<SearchPage /> } path='/search' />
             <Route element={<DeckMaker seriesData={seriesData} cardSeries={cardSeries} /> } path='/deckmaker' />
             <Route element={<SeriesRoutes seriesData={seriesData} cardSeries={cardSeries} />} path='/series/*' />

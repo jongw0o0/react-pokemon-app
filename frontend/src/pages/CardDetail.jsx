@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { TiltCard } from "../components";
 import TCGdex from "@tcgdex/sdk";
 import '../css/CardDetail.css'
 

@@ -13,6 +13,8 @@ const SeriesList = ({seriesData, cardSeries}) => {
     const [A3b, setA3b] = useState(seriesData.A3b);
     const [A4, setA4] = useState(seriesData.A4);
     const [A4a, setA4a] = useState(seriesData.A4a);
+    const [B1, setB1] = useState(seriesData.B1);
+    const [B1a, setB1a] = useState(seriesData.B1a);
     const [pA, setPA] = useState(seriesData["P-A"]); // 하이픈 있는 key는 별칭으로
 
     console.log(seriesData)
