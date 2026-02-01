@@ -1,6 +1,11 @@
 spring:
   application:
     name: arch
+  
+  # security:
+  #   user:
+  #   name: jw
+  #   password: '1234'
 
   # 1. 데이터베이스 접속 설정 (MySQL)
   datasource:
