@@ -9,19 +9,26 @@ import com.pokepoke.arch.entity.DeckCard;
 import com.pokepoke.arch.entity.Member;
 import com.pokepoke.arch.repository.DeckCardRepository;
 import com.pokepoke.arch.repository.DeckRepository;
+import com.pokepoke.arch.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class SaveDeckService {
+public class DeckService {
 
     private final DeckRepository deckRepository;
     private final DeckCardRepository deckCardRepository;
+    private final MemberRepository memberRepository;
 
-    public Long saveDeck(DeckCreateDto dto, Member member) {
+    @Transactional
+    public Long saveDeck(DeckCreateDto dto, Long memberId) {
 
+        // 회원 정보 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                
         // 덱 엔티티 생성 및 저장
         Deck deck = Deck.createDeck(dto.getDeckName(), dto.getDeckComment(), member);
         deckRepository.save(deck);
@@ -36,3 +43,4 @@ public class SaveDeckService {
     }
 
 }
+

@@ -10,14 +10,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.ToString; 
 
 @Entity
 @Getter
+@Table(name = "deck_card")
 @ToString
-@Table(name = "deckCard")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DeckCard {
 

@@ -41,9 +41,10 @@ public class SecurityConfig {
                 
                 // 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/main/**", "/api/items/**").permitAll()
+                        .requestMatchers("/api/main/**", "/api/members/login", "/api/members/join").permitAll()
                         .requestMatchers("/api/members/login", "/api/members/join").permitAll()
-                        .requestMatchers("/img/**", "/**/*.html").permitAll()
+                        .requestMatchers("/api/saveDeck").permitAll()
+                        .requestMatchers("/img/**", "/**/*.html", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/login/oauth2/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()   // 나머지 모든 접근은 인증 요구
@@ -84,8 +85,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // 3000번 포트에서 오는 요청만 신뢰하도록 지정
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
         // 허용할 요청 방식
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // 모든 헤더 정보를 신뢰하도록 설정

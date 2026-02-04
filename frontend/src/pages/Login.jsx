@@ -21,14 +21,15 @@ const Login = () => {
     e.preventDefault();
     try {
       // 백엔드의 @PostMapping("/api/members/login") 호출
-      // 아까 Join과 마찬가지로 DTO 필드명(loginId, password)을 맞춰줍니다.
       const response = await axios.post('http://localhost:8000/api/members/login', loginData, {withCredentials: true }); // 중요! 세션 쿠키를 주고받기 위해 설정
 
-      localStorage.setItem("userName", response.data); // "이종우님" 저장
-      alert(response.data); // "이종우님 환영합니다!" 메시지 출력
-      
-    //   navigate('/'); // 로그인 성공 시 메인 페이지로 이동
-        window.location.href = '/'; // 페이지 새로고침과 함께 메인 페이지로 이동
+      const welcomeMsg = response.data.message; 
+      const userName = response.data.userName;
+
+      localStorage.setItem("userName", userName); 
+      alert(`${userName}님, ${welcomeMsg}`); 
+
+      window.location.href = '/'; 
     } catch (error) {
       console.error('로그인 실패:', error.response?.data);
       alert(error.response?.data || '아이디 또는 비밀번호를 확인해주세요.');

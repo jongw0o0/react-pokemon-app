@@ -16,8 +16,15 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;    
 
+    // 아이디로 회원 조회
+    public Member findByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
+    }
+
+    // 회원가입
     public Long joinMember(MemberJoinDto dto) {
         checkMember(dto);
         Member member = Member.creatMember(dto, passwordEncoder);
@@ -25,11 +32,13 @@ public class MemberService {
         return member.getId();
     }
 
+    // 로그인
+    // MemberController에서 AuthenticationManager를 사용하는 방식으로 로그인 기능을 구현하였다면, MemberService.login 메서드는 더 이상 컨트롤러에서 직접 호출되지 않을 수도 있음
     public Member login(String loginId, String password) {
         // 아이디로 회원 조회
-        Member member = memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 아이디입니다."));
+        Member member = findByLoginId(loginId);
 
+        // 비밀번호 일치 여부 확인
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
@@ -37,7 +46,7 @@ public class MemberService {
         return member;
     }
 
-
+    // 아이디, 이메일 중복 체크
     public void checkMember(MemberJoinDto dto){
         if(memberRepository.existsByLoginId(dto.getLoginId())) 
             throw new IllegalStateException("이미 사용 중인 아이디입니다.");
