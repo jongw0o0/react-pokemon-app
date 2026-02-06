@@ -6,6 +6,7 @@ import SeriesDetail from "./SeriesDetail";
 import CardDetail from "./CardDetail";
 import SearchPage from "./SearchPage";
 import DeckMaker from "./DeckMaker";
+import DeckRecipeBoard from "./DeckRecipeBoard";
 import CardSimulator from "./CardSimulator";
 
-export {MainPage, Login, Join, SeriesList, SeriesDetail, CardDetail, SearchPage, DeckMaker, CardSimulator};
+export {MainPage, Login, Join, SeriesList, SeriesDetail, CardDetail, SearchPage, DeckMaker, DeckRecipeBoard, CardSimulator};

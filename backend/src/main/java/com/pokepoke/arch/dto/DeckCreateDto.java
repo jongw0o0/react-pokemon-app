@@ -19,4 +19,8 @@ public class DeckCreateDto {
     // TCGDex API의 ID 리스트
     @Size(min = 20, max = 20, message = "카드는 정확히 20장을 선택해야 합니다.")
     private List<String> apiCardIds; 
+
+    private String representativeCardId;
+    
+    private String representativeImageUrl;
 }

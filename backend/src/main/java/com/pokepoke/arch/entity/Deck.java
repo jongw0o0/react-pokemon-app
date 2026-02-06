@@ -1,5 +1,9 @@
 package com.pokepoke.arch.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,20 +33,66 @@ public class Deck {
 
     @Column(nullable = false)
     private String deckName;
-    
+
     @Column(nullable = false)
     private String deckComment;
+
+    private String representativeCardId;
+
+    private String representativeImageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static Deck createDeck(String deckName, String deckComment, Member member) {
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeckCard> deckCards = new ArrayList<>();
+
+    public static Deck createDeck(String deckName, String deckComment, String representativeCardId,
+                                String representativeImageUrl, Member member) {
         Deck deck = new Deck();
         deck.deckName = deckName;
         deck.deckComment = deckComment;
+        deck.representativeCardId = representativeCardId;
+        deck.representativeImageUrl = representativeImageUrl;
         deck.member = member;
         return deck;
+    }
+
+    public String getRepresentativeCardId() {
+        if (this.representativeCardId != null && !this.representativeCardId.isEmpty()) {
+            return this.representativeCardId;
+        }
+        if (this.deckCards != null && !this.deckCards.isEmpty()) {
+            return this.deckCards.get(0).getApiCardId();
+        }
+        return null;
+    }
+
+    public String getRepresentativeImageUrl() {
+        if (this.representativeImageUrl != null && !this.representativeImageUrl.isEmpty()) {
+            return this.representativeImageUrl;
+        }
+
+        if (this.deckCards != null && !this.deckCards.isEmpty()) {
+            String cardId = this.deckCards.get(0).getApiCardId();
+
+            int lastIndex = cardId.lastIndexOf("-");
+            String formattedPath = (lastIndex != -1)
+                    ? cardId.substring(0, lastIndex) + "/" + cardId.substring(lastIndex + 1)
+                    : cardId;
+
+            return "https://assets.tcgdex.net/en/tcgp/" + formattedPath + "/low.png";
+        }
+
+        // 카드조차 없다면 기본 이미지 반환
+        return "https://assets.tcgdex.net/en/tcgp/B1/1/low.png";
+    }
+
+    // 덱 서비스에서 덱 저장 위해 필요한 메서드
+    public void setFinalRepresentativeInfo() {
+        this.representativeCardId = this.getRepresentativeCardId();
+        this.representativeImageUrl = this.getRepresentativeImageUrl();
     }
 
 }
