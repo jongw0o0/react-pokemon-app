@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pokepoke.arch.dto.DeckCreateDto;
+import com.pokepoke.arch.dto.DeckDetailDto;
 import com.pokepoke.arch.dto.DeckInfoDto;
 import com.pokepoke.arch.entity.Deck;
 import com.pokepoke.arch.entity.DeckCard;
@@ -56,7 +57,7 @@ public class DeckService {
         }
 
         deck.setFinalRepresentativeInfo();
-        
+
         deckRepository.save(deck);
         return deck.getId();
     }
@@ -80,6 +81,29 @@ public class DeckService {
         return decks.stream()
                 .map(deckInfoMapper::entityToDto)
                 .collect(Collectors.toList());
+    }
+
+    public DeckDetailDto getDeckDetail(Long deckId) {
+        Deck deck = deckRepository.findById(deckId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 덱입니다."));
+
+        List<DeckCard> deckCards = deckCardRepository.findByDeckId(deckId);
+        List<String> apiCardIds = deckCards.stream()
+                .map(DeckCard::getApiCardId)
+                .collect(Collectors.toList());
+    
+        // DeckDetailDto dto = new DeckDetailDto();
+        // dto.setDeckName(deck.getDeckName());
+        // dto.setDeckComment(deck.getDeckComment());
+        // dto.setUserName(deck.getMember().getName());
+        // dto.setApiCardIds(apiCardIds);
+        // dto.setRepresentativeCardId(deck.getRepresentativeCardId());
+        // dto.setRepresentativeImageUrl(deck.getRepresentativeImageUrl());
+
+        // return dto;
+
+        // 매퍼 사용
+        return deckInfoMapper.entityToDetailDto(deck, apiCardIds);
     }
 
 }

@@ -1,8 +1,11 @@
 package com.pokepoke.arch.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import com.pokepoke.arch.dto.DeckDetailDto;
 import com.pokepoke.arch.dto.DeckInfoDto;
 import com.pokepoke.arch.entity.Deck;
 
@@ -15,4 +18,9 @@ public interface DeckInfoMapper {
     @Mapping(source = "representativeImageUrl", target = "representativeImageUrl")
     @Mapping(source = "representativeCardId", target = "representativeCardId")
     DeckInfoDto entityToDto(Deck deck);
+
+    // 상세 조회용 매핑 추가
+    @Mapping(source = "deck.member.name", target = "userName") // 작성자 이름
+    @Mapping(source = "apiCardIds", target = "apiCardIds")     // 파라미터로 받은 리스트 매핑
+    DeckDetailDto entityToDetailDto(Deck deck, List<String> apiCardIds);
 }

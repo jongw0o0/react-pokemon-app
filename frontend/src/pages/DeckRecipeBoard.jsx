@@ -1,28 +1,30 @@
-    import React, { useEffect, useState } from 'react';
-    import axios from 'axios';
-    import '../css/DeckRecipeBoard.css';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../css/DeckRecipeBoard.css';
 
-    const DeckRecipeBoard = () => {
+const DeckRecipeBoard = () => {
+    const navigate = useNavigate();
 
-        const [recipes, setRecipes] = useState([]);
-        const [loading, setLoading] = useState(true);
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-        useEffect(() => {
-            const fetchRecipes = async () => {
-                try {
-                    // 전체 덱 조회 API 호출
-                    const response = await axios.get('http://localhost:8000/api/decks');
-                    setRecipes(response.data);
-                } catch (error) {
-                    console.error("레시피를 불러오지 못했습니다.", error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-            fetchRecipes();
-        }, []);
+    useEffect(() => {
+        const fetchRecipes = async () => {
+            try {
+                // 전체 덱 조회 API 호출
+                const response = await axios.get('http://localhost:8000/api/decks');
+                setRecipes(response.data);
+            } catch (error) {
+                console.error("레시피를 불러오지 못했습니다.", error);
+            } finally { 
+                setLoading(false);
+            }
+        };
+        fetchRecipes();
+    }, []);
 
-        if (loading) return <div className="loading-screen">포켓몬 도감을 동기화 중...</div>;
+    if (loading) return <div className="loading-screen">포켓몬 도감을 동기화 중...</div>;
 
     return (
         <div className="recipe-board-container">
@@ -64,13 +66,18 @@
                                 <p className="deck-comment">{recipe.deckComment}</p>
                             </div>
                             <div className="recipe-footer">
-                                <button className="detail-btn">자세히 보기</button>
+                                <button 
+                                    className="detail-btn"
+                                    onClick={() => navigate(`/deck/${recipe.deckId}`)}
+                                >
+                                    자세히 보기
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
-            </div>
+        </div>
     );
-    }
+};
 
-    export default DeckRecipeBoard;
+export default DeckRecipeBoard;

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import TCGdex from "@tcgdex/sdk";
 import { Header, Footer } from './components';
-import { CardDetail, Login, Join, MainPage, SearchPage, DeckMaker, DeckRecipeBoard, CardSimulator } from './pages';
+import { CardDetail, Login, Join, MainPage, SearchPage, DeckMaker, DeckDetail,DeckRecipeBoard, CardSimulator } from './pages';
 import { SeriesRoutes } from './routes';
 import './App.css'
 
@@ -58,6 +58,7 @@ const App = () => {
             <Route element={<SearchPage /> } path='/search' />
             <Route element={<DeckMaker seriesData={seriesData} cardSeries={cardSeries} /> } path='/deckmaker' />
             <Route element={<DeckRecipeBoard /> } path='/deckRecipes' />
+            <Route element={<DeckDetail />} path='/deck/:deckId' />
             <Route element={<SeriesRoutes seriesData={seriesData} cardSeries={cardSeries} />} path='/series/*' />
             <Route element={<CardDetail /> } path='card/:id' />
           </Route>

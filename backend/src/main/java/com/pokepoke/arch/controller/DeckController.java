@@ -6,12 +6,14 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pokepoke.arch.dto.DeckCreateDto;
+import com.pokepoke.arch.dto.DeckDetailDto;
 import com.pokepoke.arch.dto.DeckInfoDto;
 import com.pokepoke.arch.entity.Member;
 import com.pokepoke.arch.service.DeckService;
@@ -77,6 +79,19 @@ public class DeckController {
         } catch (Exception e) {
             e.printStackTrace(); // 에러 로그 확인용
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("덱 조회 실패: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/decks/{deckId}")
+    public ResponseEntity<?> getDeckDetail(@PathVariable("deckId") Long deckId) {
+        try {
+            DeckDetailDto deckDetail = deckService.getDeckDetail(deckId);
+            return ResponseEntity.ok(deckDetail);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회 실패: " + e.getMessage());
         }
     }
 
