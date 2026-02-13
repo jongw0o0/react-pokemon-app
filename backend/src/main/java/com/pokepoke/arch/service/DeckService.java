@@ -40,12 +40,11 @@ public class DeckService {
 
         // 덱 엔티티 생성 및 저장
         Deck deck = Deck.createDeck(
-            dto.getDeckName(),
-            dto.getDeckComment(),
-            dto.getRepresentativeCardId(),
-            dto.getRepresentativeImageUrl(),
-            member
-        );
+                dto.getDeckName(),
+                dto.getDeckComment(),
+                dto.getRepresentativeCardId(),
+                dto.getRepresentativeImageUrl(),
+                member);
 
         // 카드 ID 리스트를 순회하며 DeckCard 엔티티 생성 및 저장
         for (String cardId : dto.getApiCardIds()) {
@@ -60,6 +59,14 @@ public class DeckService {
 
         deckRepository.save(deck);
         return deck.getId();
+    }
+
+    @Transactional
+    public void deleteDeck(Long deckId) {
+        Deck deck = deckRepository.findById(deckId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 덱입니다."));
+                
+        deckRepository.delete(deck); 
     }
 
     // 모든 공개 덱 조회
@@ -91,7 +98,7 @@ public class DeckService {
         List<String> apiCardIds = deckCards.stream()
                 .map(DeckCard::getApiCardId)
                 .collect(Collectors.toList());
-    
+
         // DeckDetailDto dto = new DeckDetailDto();
         // dto.setDeckName(deck.getDeckName());
         // dto.setDeckComment(deck.getDeckComment());
@@ -103,7 +110,9 @@ public class DeckService {
         // return dto;
 
         // 매퍼 사용
-        return deckInfoMapper.entityToDetailDto(deck, apiCardIds);
+        DeckDetailDto dto = deckInfoMapper.entityToDetailDto(deck, apiCardIds);
+
+        return dto;
     }
 
 }

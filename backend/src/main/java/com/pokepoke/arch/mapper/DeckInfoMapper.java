@@ -20,7 +20,8 @@ public interface DeckInfoMapper {
     DeckInfoDto entityToDto(Deck deck);
 
     // 상세 조회용 매핑 추가
-    @Mapping(source = "deck.member.name", target = "userName") // 작성자 이름
-    @Mapping(source = "apiCardIds", target = "apiCardIds")     // 파라미터로 받은 리스트 매핑
+    @Mapping(source = "deck.member.name", target = "userName")
+    @Mapping(source = "deck.member.id", target = "memberId")
+    @Mapping(source = "apiCardIds", target = "apiCardIds")
     DeckDetailDto entityToDetailDto(Deck deck, List<String> apiCardIds);
 }

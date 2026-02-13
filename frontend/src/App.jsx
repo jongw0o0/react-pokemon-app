@@ -5,6 +5,7 @@ import { Header, Footer } from './components';
 import { CardDetail, Login, Join, MainPage, SearchPage, DeckMaker, DeckDetail,DeckRecipeBoard, CardSimulator } from './pages';
 import { SeriesRoutes } from './routes';
 import './App.css'
+import axios from 'axios';
 
 const Layout = () => {
   return (
@@ -15,6 +16,9 @@ const Layout = () => {
     </div>
   );
 };
+
+// 모든 axios 요청에 세션 쿠키를 포함하도록 설정
+axios.defaults.withCredentials = true;
 
 const App = () => {
   const [cardSeries, setCardSeries] = useState({ sets: [] });

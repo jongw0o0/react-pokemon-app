@@ -64,6 +64,7 @@ public class MemberController {
             return ResponseEntity.ok().body(Map.of(
                     "message", "환영합니다.",
                     "loginId", authentication.getName(),    // UserDetails.getUsername()의 리턴값
+                    "memberId", loginMember.getId(),
                     "userName", loginMember.getName(),      // 사용자 이름
                     "role", authentication.getAuthorities() // 로그인한 사용자의 권한 목록
                             .stream()                           // 시큐리티는 기본적으로 권한 목록을 객체로 관리

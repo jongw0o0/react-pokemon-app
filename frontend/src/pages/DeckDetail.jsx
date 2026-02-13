@@ -10,6 +10,7 @@ const DeckDetail = () => {
     
     const [deck, setDeck] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isOwner, setIsOwner] = useState(false);
 
     // API ID를 이미지 URL로 변환 (A1-218 -> A1/218)
     const getImageUrl = (cardId) => {
@@ -40,6 +41,38 @@ const DeckDetail = () => {
         fetchDeckDetail();
     }, [deckId, navigate]);
 
+    useEffect(() => {
+        if (deck && deck.memberId) {
+            // 현재 로그인한 사용자 정보 가져오기
+            const myId = localStorage.getItem("memberId");
+            
+            if (String(deck.memberId) === String(myId)) {
+                setIsOwner(true);
+            } else {
+                setIsOwner(false);
+            }
+        }
+    }, [deck]);
+
+    const handleDelete = async () => {
+        // 1. 사용자에게 한 번 더 물어보기 (실수 방지)
+        if (window.confirm("정말로 이 덱 레시피를 삭제하시겠습니까?")) {
+            try {
+                // 2. 백엔드 삭제 API 호출
+                await axios.delete(`http://localhost:8000/api/decks/${deckId}`, {
+                    withCredentials: true 
+                });
+                alert("성공적으로 삭제되었습니다.");
+                
+                // 3. 삭제 후 목록 페이지로 이동
+                navigate('/deckRecipes'); 
+            } catch (error) {
+                console.error("삭제 실패:", error);
+                alert("삭제 중 오류가 발생했습니다. 본인 덱이 맞는지 확인해 주세요.");
+            }
+        }
+    };
+
     // 덱 정보가 있을 때만 실행
     const cardCounts = deck?.apiCardIds.reduce((acc, id) => {
         acc[id] = (acc[id] || 0) + 1;
@@ -55,6 +88,12 @@ const DeckDetail = () => {
     return (
         <div id="DeckDetail">
             <header className="deck-detail-header">
+                {isOwner && (
+                    <div className="owner-actions">
+                        <button className="edit-btn" onClick={() => navigate(`/deck/edit/${deckId}`)}>수정</button>
+                        <button className="delete-btn" onClick={handleDelete}>삭제</button>
+                    </div>
+                )}
                 <div className="header-content">
                     <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로가기</button>
                     <h1>{deck.deckName}</h1>

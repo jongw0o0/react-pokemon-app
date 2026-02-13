@@ -25,9 +25,13 @@ const Login = () => {
 
       const welcomeMsg = response.data.message; 
       const userName = response.data.userName;
+      const memberId = response.data.memberId;
 
+      // 로그인 성공 시 사용자 정보와 환영 메시지를 로컬 스토리지에 저장
       localStorage.setItem("userName", userName); 
+      localStorage.setItem("memberId", memberId);
       alert(`${userName}님, ${welcomeMsg}`); 
+      console.log("로그인 응답 전체 데이터:", response.data)
 
       window.location.href = '/'; 
     } catch (error) {

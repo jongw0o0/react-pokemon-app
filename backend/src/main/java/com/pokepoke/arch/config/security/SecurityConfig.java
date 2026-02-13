@@ -3,6 +3,7 @@ package com.pokepoke.arch.config.security;
 import com.pokepoke.arch.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,9 +42,10 @@ public class SecurityConfig {
                 
                 // 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/main/**", "/api/members/login", "/api/members/join").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/decks/**").authenticated()
                         .requestMatchers("/api/decks/**").permitAll()
                         .requestMatchers("/api/decks/me").authenticated()
+                        .requestMatchers("/api/main/**", "/api/members/login", "/api/members/join").permitAll()
                         .requestMatchers("/api/members/login", "/api/members/join").permitAll()
                         .requestMatchers("/api/saveDeck").permitAll()
                         .requestMatchers("/img/**", "/**/*.html", "/css/**", "/js/**").permitAll()

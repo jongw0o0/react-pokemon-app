@@ -3,6 +3,11 @@ package com.pokepoke.arch.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+// import org.hibernate.annotations.DialectOverride.SQLDelete;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +29,8 @@ import lombok.ToString;
 @ToString
 @Table(name = "deck")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE deck SET is_deleted = 'Y' WHERE deck_id = ?")
+@Where(clause = "is_deleted = 'N'")
 public class Deck {
 
     @Id
@@ -47,6 +54,9 @@ public class Deck {
 
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DeckCard> deckCards = new ArrayList<>();
+
+    @Column(name = "is_deleted", nullable = false)
+    private String isDeleted = "N";
 
     public static Deck createDeck(String deckName, String deckComment, String representativeCardId,
                                 String representativeImageUrl, Member member) {
