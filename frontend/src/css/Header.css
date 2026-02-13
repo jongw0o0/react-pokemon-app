@@ -27,3 +27,58 @@
 #Header .right ul li a{
     color: black;
 }
+/* 드롭다운 부모 요소 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdown-menu {
+    position: absolute;
+    top: 100%; /* 부모 메뉴 바로 아래 위치 */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2a2a2a; /* 헤더 배경색과 맞춤 */
+    min-width: 120px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    padding: 10px 0;
+    list-style: none;
+    z-index: 1000;
+    border-radius: 4px;
+    border: 1px solid #444;
+}
+
+/* 드롭다운 내부 링크 */
+.dropdown-menu li {
+    padding: 5px 15px;
+    white-space: nowrap;
+}
+
+.dropdown-menu li a {
+    color: white !important;
+    font-size: 14px !important;
+    text-decoration: none;
+    display: block;
+    transition: color 0.3s;
+}
+
+.dropdown-menu li a:hover {
+    color: #ffcb05 !important;
+}
+
+/* 애니메이션 효과 */
+.dropdown-menu {
+    animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}

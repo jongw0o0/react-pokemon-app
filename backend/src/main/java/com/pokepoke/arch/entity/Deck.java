@@ -31,7 +31,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE deck SET is_deleted = 'Y' WHERE deck_id = ?")
 @Where(clause = "is_deleted = 'N'")
-public class Deck {
+public class Deck extends BaseEntity  {
 
     @Id
     @Column(name = "deck_id")
@@ -67,6 +67,18 @@ public class Deck {
         deck.representativeImageUrl = representativeImageUrl;
         deck.member = member;
         return deck;
+    }
+
+    public void updateDeck(String deckName, String deckComment,
+                                  String representativeCardId, String representativeImageUrl) {
+        this.deckName = deckName;
+        this.deckComment = deckComment;
+        this.representativeCardId = representativeCardId;
+        this.representativeImageUrl = representativeImageUrl;
+    }
+
+    public void clearCards() {
+        this.deckCards.clear();
     }
 
     public String getRepresentativeCardId() {

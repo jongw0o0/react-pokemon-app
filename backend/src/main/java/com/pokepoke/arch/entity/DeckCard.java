@@ -25,7 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE deck_card SET is_deleted = 'Y' WHERE deck_card_id = ?")
 @Where(clause = "is_deleted = 'N'")
-public class DeckCard {
+public class DeckCard extends BaseEntity {
 
     @Id
     @Column(name = "deck_card_id")

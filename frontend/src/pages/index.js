@@ -8,6 +8,8 @@ import SearchPage from "./SearchPage";
 import DeckMaker from "./DeckMaker";
 import DeckRecipeBoard from "./DeckRecipeBoard";
 import DeckDetail from "./DeckDetail";
+import DeckEdit from "./DeckEdit";
+import Search from "./Search";
 import CardSimulator from "./CardSimulator";
 
-export {MainPage, Login, Join, SeriesList, SeriesDetail, CardDetail, SearchPage, DeckMaker, DeckRecipeBoard, DeckDetail, CardSimulator};
+export {MainPage, Login, Join, SeriesList, SeriesDetail, CardDetail, SearchPage, DeckMaker, DeckRecipeBoard, DeckDetail, DeckEdit, Search, CardSimulator};

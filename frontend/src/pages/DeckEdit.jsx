@@ -5,8 +5,8 @@ import '../css/DeckMaker.css'
 import { useState } from "react";
 import { useMemo } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; 
+import { useParams } from "react-router-dom";
 
 const RARITIES = [
     "One Diamond", 
@@ -42,7 +42,7 @@ const TRAINER_SUBTYPES = [
     { label: "화석", value: "Item (Fossil)" }
 ];
 
-const DeckMaker = ({seriesData, cardSeries}) => {
+const DeckEdit = ({seriesData, cardSeries}) => {
 
     const navigate = useNavigate();
 
@@ -67,7 +67,7 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     const [selectedType, setSelectedType] = useState("all");            // 타입
     const [selectedStage, setSelectedStage] = useState("all");          // 진화 단계
     // const [hpRange, setHpRange] = useState("all");                      // HP 범위
-    const [selectedRetreat, setSelectedRetreat] = useState("all");      // 후퇴 코스트
+    // const [selectedRetreat, setSelectedRetreat] = useState("all");      // 후퇴 코스트
     const [selectedSubtype, setSelectedSubtype] = useState("all");      // 트레이너스 세부 종류
 
     // 필터링에 사용할 허용된 카드 ID 명단(얘들은 useEffect에서 API로 불러옴)
@@ -78,6 +78,34 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     // const [allowedRetreatIds, setAllowedRetreatIds] = useState(null);
     const [displayCount, setDisplayCount] = useState(40);
     const [allowedSubtypeIds, setAllowedSubtypeIds] = useState(null);
+
+    const { deckId } = useParams(); // URL에서 수정할 덱 ID 추출
+
+    useEffect(() => {
+        const fetchOriginalDeck = async () => {
+            if (!detailedCards.length) return; // 전체 카드 목록이 로드된 후 실행
+
+            try {
+                const response = await axios.get(`http://localhost:8000/api/decks/${deckId}`);
+                const data = response.data;
+
+                setDeckName(data.deckName);
+                setDeckComment(data.deckComment);
+                
+                // ⭐ 중요: ID 리스트를 실제 카드 객체 리스트로 변환
+                const originalCards = data.apiCardIds.map(id => 
+                    detailedCards.find(card => card.id === id)
+                ).filter(Boolean); // 혹시 모를 null 방지
+
+                setSelectedCards(originalCards);
+                setRepresentativeCardId(data.representativeCardId);
+                setRepresentativeImgUrl(data.representativeImageUrl);
+            } catch (error) {
+                console.error("데이터 로드 실패:", error);
+            }
+        };
+        fetchOriginalDeck();
+    }, [deckId, detailedCards]);
 
     // 전체 카드 목록 로드 (UI 렌더링용 최소 데이터)
     useEffect(() => {
@@ -95,7 +123,7 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                     })
                 );
                 const allSummary = allSets.flat();
-
+                
                 console.log("로드된 카드 샘플:", allSummary[allSummary.length - 1], "총 카드 수:", allSummary.length); 
                 
                 setDetailedCards(allSummary);
@@ -262,19 +290,12 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     };
 
     // 덱 저장
-    const saveDeck = async () => {
-        
+    const handleUpdate = async () => {
         if (selectedCards.length !== 20) {
-            alert("20장을 모두 채워야 저장할 수 있습니다!");
-            return;
-        }
-        
-        if (!deckName.trim()) {
-            alert("덱 이름을 입력해주세요.");
+            alert("20장을 모두 채워야 수정할 수 있습니다!");
             return;
         }
 
-        // 백엔드의 DectCreateDto 참고
         const deckData = {
             deckName: deckName,
             deckComment: deckComment,
@@ -284,17 +305,15 @@ const DeckMaker = ({seriesData, cardSeries}) => {
         };
 
         try {
-            // Axios를 사용해 백엔드 saveDeckService(컨트롤러)로 전송
-            const response = await axios.post('http://localhost:8000/api/saveDeck', deckData, {withCredentials: true});
-            console.log("백엔드로 전송할 데이터:", deckData);
-            alert("덱이 성공적으로 저장되었습니다!");
-            navigate('/deckRecipes'); // 저장 후 덱 레시피 게시판으로 이동
+            // ⭐ POST 대신 PUT을 사용하고 URL에 deckId를 포함합니다.
+            await axios.put(`http://localhost:8000/api/decks/${deckId}`, deckData, { withCredentials: true });
+            alert("성공적으로 수정되었습니다!");
+            navigate(`/deck/${deckId}`); // 수정 완료 후 다시 상세 페이지로 이동
         } catch (error) {
-            console.error("저장 실패:", error);
-            alert("저장 중 오류가 발생했습니다.");
+            console.error("수정 실패:", error);
+            alert("수정 중 오류가 발생했습니다.");
         }
-
-    }
+    };
 
     return (
         <div id="DeckMaker">
@@ -325,7 +344,7 @@ const DeckMaker = ({seriesData, cardSeries}) => {
 
                     <button 
                         className="save-btn"
-                        onClick={saveDeck}
+                        onClick={handleUpdate}
                         disabled={selectedCards.length !== 20}
                     >
                         덱 저장하기
@@ -417,7 +436,6 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                     <ul>
                         {visibleCards.map((card) => (
                             <li key={card.id} onClick={() => handleCardClick(card)}>
-                                {/* /low.webp를 붙여 저용량으로 호출, lazy 로딩으로 브라우저 부하 방지 */}
                                 <img src={`${card.image}/low.webp`} alt={card.name} loading="lazy" />
                                 <p>{card.name}</p>
                             </li>
@@ -434,4 +452,4 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     );
 }
 
-export default DeckMaker;
+export default DeckEdit;

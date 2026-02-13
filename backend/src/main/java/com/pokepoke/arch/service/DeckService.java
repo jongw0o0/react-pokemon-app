@@ -62,6 +62,33 @@ public class DeckService {
     }
 
     @Transactional
+    public void updateDeck(Long deckId, DeckCreateDto dto, Long memberId) {
+        Deck deck = deckRepository.findById(deckId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 덱입니다."));
+
+        // 권환 확인
+        if (!deck.getMember().getId().equals(memberId)) {
+            throw new IllegalStateException("수정 권한이 없습니다.");
+        }
+    
+        deck.updateDeck(
+            dto.getDeckName(), 
+            dto.getDeckComment(), 
+            dto.getRepresentativeCardId(), 
+            dto.getRepresentativeImageUrl()
+        );
+    
+        deck.getDeckCards().clear();
+
+        for (String cardId : dto.getApiCardIds()) {
+            DeckCard deckCard = DeckCard.createDeckCard(deck, cardId);
+            deck.getDeckCards().add(deckCard);
+        }
+
+        deck.setFinalRepresentativeInfo();
+    }
+
+    @Transactional
     public void deleteDeck(Long deckId) {
         Deck deck = deckRepository.findById(deckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 덱입니다."));

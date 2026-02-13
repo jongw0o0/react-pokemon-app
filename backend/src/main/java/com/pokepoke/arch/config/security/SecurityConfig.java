@@ -43,6 +43,7 @@ public class SecurityConfig {
                 // 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.DELETE, "/api/decks/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/decks/**").authenticated()
                         .requestMatchers("/api/decks/**").permitAll()
                         .requestMatchers("/api/decks/me").authenticated()
                         .requestMatchers("/api/main/**", "/api/members/login", "/api/members/join").permitAll()
