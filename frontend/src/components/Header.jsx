@@ -4,7 +4,8 @@ import { useState } from 'react'; // 드롭다운 상태 관리를 위해 추가
 
 const Header = () => {
     const userName = localStorage.getItem("userName");
-    const [isDeckHovered, setIsDeckHovered] = useState(false); // 드롭다운 상태
+    const [isDeckHovered, setIsDeckHovered] = useState(false);
+    const [isUserHovered, setIsUserHovered] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem("userName");
@@ -40,16 +41,23 @@ const Header = () => {
                     <li><Link to='/search'>검색</Link></li>
                     
                     {userName ? (
-                        <>
-                            <li className="user-name" style={{ color: '#ffcb05', fontWeight: 'bold' }}>
-                                {userName}
-                            </li>
-                            <li>
-                                <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', color: '#fff' }}>
-                                    로그아웃
-                                </button>
-                            </li>
-                        </>
+                        <li 
+                            className="dropdown" 
+                            onMouseEnter={() => setIsUserHovered(true)} 
+                            onMouseLeave={() => setIsUserHovered(false)}
+                        >
+                            <span className="user-name" style={{ color: '#ffcb05', fontWeight: 'bold', cursor: 'pointer' }}>
+                                {userName} ▼
+                            </span>
+                            {isUserHovered && (
+                                <ul className="dropdown-menu">
+                                    <li><Link to='/mypage/my-decks'>내가 만든 덱</Link></li>
+                                    <li><Link to='/mypage/scrapped-decks'>스크랩한 덱</Link></li>
+                                    <li><Link to='/mypage/liked-cards'>좋아요한 카드</Link></li>
+                                    <li><button onClick={handleLogout} className="logout-btn">로그아웃</button></li>
+                                </ul>
+                            )}
+                        </li>
                     ) : (
                         <li><Link to='/login'>로그인</Link></li>
                     )}

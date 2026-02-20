@@ -11,6 +11,7 @@ const DeckDetail = () => {
     const [deck, setDeck] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
+    const [isScrapped, setIsScrapped] = useState(false);
 
     // API ID를 이미지 URL로 변환 (A1-218 -> A1/218)
     const getImageUrl = (cardId) => {
@@ -73,6 +74,23 @@ const DeckDetail = () => {
         }
     };
 
+    const handleScrap = async () => {
+        const memberId = localStorage.getItem("memberId");
+        if (!memberId) {
+            alert("로그인 후 이용 가능합니다.");
+            return;
+        }
+        setIsScrapped(!isScrapped); // UI 즉시 반영 (낙관적 업데이트)
+        // try {
+        //     // 백엔드: ScrapController에서 처리 (memberId, deckId 전송)
+        //     await axios.post(`http://localhost:8000/api/decks/${deckId}/scrap`, {}, { withCredentials: true });
+        //     setIsScrapped(!isScrapped); // 상태 토글
+        //     alert(isScrapped ? "스크랩이 취소되었습니다." : "덱을 스크랩했습니다!");
+        // } catch (error) {
+        //     console.error("스크랩 오류:", error);
+        // }
+    };
+
     // 덱 정보가 있을 때만 실행
     const cardCounts = deck?.apiCardIds.reduce((acc, id) => {
         acc[id] = (acc[id] || 0) + 1;
@@ -88,14 +106,22 @@ const DeckDetail = () => {
     return (
         <div id="DeckDetail">
             <header className="deck-detail-header">
-                {isOwner && (
-                    <div className="owner-actions">
-                        <button className="edit-btn" onClick={() => navigate(`/deck/edit/${deckId}`)}>수정</button>
-                        <button className="delete-btn" onClick={handleDelete}>삭제</button>
-                    </div>
-                )}
-                <div className="header-content">
+                <div className="header-top-actions">
                     <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로가기</button>
+                    {isOwner && (
+                        <div className="owner-actions">
+                            <button className="edit-btn" onClick={() => navigate(`/deck/edit/${deckId}`)}>수정</button>
+                            <button className="delete-btn" onClick={handleDelete}>삭제</button>
+                        </div>
+                    )}
+                    <button 
+                        className={`scrap-btn ${isScrapped ? 'active' : ''}`} 
+                        onClick={handleScrap}
+                    >
+                        {isScrapped ? '스크랩 됨' : '덱 스크랩'}
+                    </button>
+                </div>
+                <div className="header-content">
                     <h1>{deck.deckName}</h1>
                     <div className="deck-meta">
                         <span className="author">By. <strong>{deck.userName}</strong></span>

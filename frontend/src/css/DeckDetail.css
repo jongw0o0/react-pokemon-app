@@ -33,6 +33,20 @@
     z-index: 2;
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
+.scrap-btn {
+    padding: 8px 16px;
+    border: 1px solid #ffcb05;
+    background: transparent;
+    color: #ffcb05;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.scrap-btn.active {
+    background: #ffcb05;
+    color: #000;
+}
 
 
 @media (max-width: 768px) {
