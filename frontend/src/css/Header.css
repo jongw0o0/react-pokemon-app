@@ -1,84 +1,129 @@
-#Header{
-    position: relative;
+#Header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px); 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+}
+
+.header-inner {
+    width: 100%;
+    max-width: 1400px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 50px;
-    padding: 12px 24px;
-    border-bottom: 1px solid grey;
-}
-#Header .left a{
-    color: black;
-}
-#Header .right ul{
-    display: flex;
-    /* gap: 12px; */
-}
-#Header .right ul li::after{
-    content: "";
-    margin-left: 4px;
-    margin-right: 4px;
-    /* border: 1px solid #ccc; */
-}
-#Header .right ul li:last-child::after{
-    content: '';
-    border: none;
-}
-#Header .right ul li a{
-    color: black;
-}
-/* 드롭다운 부모 요소 */
-.dropdown {
-    position: relative;
-    display: inline-block;
+    padding: 0 40px;
 }
 
-/* 드롭다운 메뉴 스타일 */
+/* 로고 스타일 */
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #0984e3, #74b9ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+}
+
+/* 네비게이션 공통 */
+.nav-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-list > li {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    position: relative;
+}
+
+/* 메뉴 텍스트 스타일 */
+.nav-item, .nav-list li > a {
+    padding: 0 15px;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.nav-item:hover, .nav-list li > a:hover {
+    color: var(--accent);
+}
+
+/* 드롭다운 메뉴 위치 및 끊김 방지 */
 .dropdown-menu {
     position: absolute;
-    top: 100%; /* 부모 메뉴 바로 아래 위치 */
+    top: 65px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #2a2a2a; /* 헤더 배경색과 맞춤 */
-    min-width: 120px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    padding: 10px 0;
-    list-style: none;
-    z-index: 1000;
-    border-radius: 4px;
-    border: 1px solid #444;
+    background-color: white;
+    min-width: 160px;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 1001;
+    animation: dropdownFade 0.2s ease-out;
 }
 
-/* 드롭다운 내부 링크 */
-.dropdown-menu li {
-    padding: 5px 15px;
-    white-space: nowrap;
+/* 메뉴와 드롭다운 사이의 투명한 다리 */
+.dropdown::after {
+    content: "";
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: 30px;
 }
 
-.dropdown-menu li a {
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* 나머지 버튼 및 유틸 스타일 */
+.login-btn {
+    background-color: var(--accent);
     color: white !important;
-    font-size: 14px !important;
-    text-decoration: none;
+    padding: 8px 20px !important;
+    border-radius: 20px;
+    margin-left: 10px;
+}
+
+.user-name {
+    color: var(--accent) !important;
+}
+
+.dropdown-menu li {
+    width: 100%;
+}
+
+.dropdown-menu li a, .logout-btn {
     display: block;
-    transition: color 0.3s;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--text-sub) !important;
+    text-align: left;
+    width: 100%;
 }
 
 .dropdown-menu li a:hover {
-    color: #ffcb05 !important;
+    background-color: #f5f7fa;
+    color: var(--accent) !important;
 }
 
-/* 애니메이션 효과 */
-.dropdown-menu {
-    animation: fadeInDown 0.3s ease-out;
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -10px);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, 0);
-    }
+.divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
 }

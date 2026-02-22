@@ -1,21 +1,115 @@
-#MainPage{
-    padding-top: 20px;
-}
-#MainPage .title{
-    font-size: 32px;
-    font-weight: 500;
-    text-align: center;
-    margin-bottom: 24px;
-}
-#MainPage .imageSlides{
-    display: flex;
-    width: calc(240px * 20);
-    animation: scroll 100s linear infinite;
-}
-@keyframes scroll{
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-300px * 10)); } /* 원본 카드 10장만큼 이동 */
-}
-#MainPage .imageSlides img{
+#MainPage {
     width: 100%;
+    padding-top: 120px;
+    background-color: var(--bg-main);
+}
+
+.main-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.main-header .title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--text-main);
+}
+
+.main-header .count {
+    color: #0984e3;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.1em;
+    letter-spacing: -0.5px;
+}
+
+.main-header .brand-name {
+    background: linear-gradient(to right, var(--accent), #74b9ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.main-header .subtitle {
+    color: #888;
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+.slider-container {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    padding: 60px 0;
+}
+
+.slider-container::before,
+.slider-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    z-index: 2;
+}
+.slider-container::before { 
+    left: 0; 
+    background: linear-gradient(to right, var(--bg-main), transparent); 
+}
+.slider-container::after { 
+    right: 0; 
+    background: linear-gradient(to left, var(--bg-main), transparent); 
+}
+
+/* 이미지 슬라이드 애니메이션 */
+.imageSlides {
+    display: flex;
+    gap: 30px;
+    width: max-content;
+    animation: scroll 60s linear infinite;
+}
+
+ /* 카드폭 + 간격 계산 */
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-240px * 10 - 300px)); }
+}
+
+/* 카드 개별 스타일 */
+.card-wrapper {
+    position: relative;
+    width: 240px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card-wrapper img {
+    width: 100%;
+    display: block;
+}
+
+/* 카드 호버 효과 */
+.card-wrapper:hover {
+    transform: translateY(-20px) scale(1.05) rotate(2deg);
+    z-index: 5;
+    box-shadow: 0 20px 40px rgba(133, 96, 96, 0.15);
+}
+
+/* 광택 효과 */
+.shine-effect {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transform: skewX(-25deg);
+    transition: 0.5s;
+}
+
+.card-wrapper:hover .shine-effect {
+    left: 150%;
 }

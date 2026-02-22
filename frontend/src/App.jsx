@@ -11,7 +11,9 @@ const Layout = () => {
   return (
     <div id="Layout">
       <Header />
-      <Outlet />
+      <main className="content-area">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

@@ -40,26 +40,27 @@ const MainPage = ({seriesData}) => {
     
     return(
         <div id="MainPage">
-            <div className="title">{total}개</div>
-            <div className="imageSlides">
-                {randCards.map(randCard => (
-                    <div className="slide" key={randCard.id}>
-                        <div className="train-card">
-                            <Link key={randCard.id} to={`/card/${randCard.id}`}>
-                                <img src={`${randCard.image}/high.webp`} alt={randCard.name} />
-                            </Link>
+            <header className="main-header">
+                <h1 className="title">
+                    <span className="count">{total.toLocaleString()}</span> 종류의 카드를 
+                    <span className="brand-name"> PokeArch</span>에서 만나보세요
+                </h1>
+                <p className="subtitle">subtitle</p>
+            </header>
+            <div className="slider-container">
+                <div className="imageSlides">
+                    {/* 무한 슬라이드를 위해 3번 반복해서 배치 (끊김 방지) */}
+                    {[...randCards, ...randCards, ...randCards].map((randCard, index) => (
+                        <div className="slide" key={`${randCard.id}-${index}`}>
+                            <div className="card-wrapper">
+                                <Link to={`/card/${randCard.id}`}>
+                                    <div className="shine-effect"></div>
+                                    <img src={`${randCard.image}/high.webp`} alt={randCard.name} loading="lazy" />
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                ))}
-                {randCards.map(randCard => (
-                    <div className="slide" key={randCard.id + "-dup"}>
-                        <div className="train-card">
-                            <Link key={randCard.id} to={`/card/${randCard.id}`}>
-                                <img src={`${randCard.image}/high.webp`} alt={randCard.name} />
-                            </Link>
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     )

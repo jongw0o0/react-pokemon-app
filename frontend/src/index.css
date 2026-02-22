@@ -1,13 +1,30 @@
 @charset "utf-8";
 
+:root {
+    --bg-main: #f5f7fa;      /* 연한 그레이시 화이트 (배경) */
+    --bg-card: #ffffff;      /* 순백색 (카드 및 섹션) */
+    --text-main: #2d3436;    /* 깊은 차콜 (본문) */
+    --text-sub: #636e72;     /* 그레이 (보조) */
+    --accent: #0984e3;       /* 블루 (포인트) */
+    --glass: rgba(0, 0, 0, 0.03); /* 밝은 배경용 아주 연한 그림자 */
+    --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
+}
+
 *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
+
 body{
     font-family: "Pretendard Variable", Pretendard, sans-serif;
     font-size: 14px;
     line-height: 1.5;
+    overflow-x: hidden;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition: background-color 0.3s ease;
+    -webkit-font-smoothing: antialiased; /* 글자 선명하게 */
     color: #121212;
 }
 ol, ul, li{
@@ -15,6 +32,12 @@ ol, ul, li{
 }
 a{
     text-decoration: none;
+    color: inherit;
+}
+img{
+    max-width: 100%;
+    height: auto;
+    vertical-align: top;
 }
 img, input, button{
     vertical-align: top;
@@ -26,4 +49,19 @@ button{
     border: 0;
     background-color: transparent;
     cursor: pointer;
+}
+
+/* 스크롤바 디자인 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
 }

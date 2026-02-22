@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import '../css/Header.css'
-import { useState } from 'react'; // 드롭다운 상태 관리를 위해 추가
+import { useState } from 'react';
 
 const Header = () => {
     const userName = localStorage.getItem("userName");
@@ -9,59 +9,66 @@ const Header = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("userName");
-        localStorage.removeItem("memberId"); // memberId도 같이 지워주는 게 좋습니다
+        localStorage.removeItem("memberId");
+        navigate('/');
         window.location.reload();
     };
     
     return(
         <header id="Header">
-            <div className='left'>
-                <Link to='/'>포켓몬카드</Link>
-            </div>
-            <div className='right'>
-                <ul>
-                    <li><Link to='/series/list'>확장팩</Link></li>
-                    
-                    {/* 덱 레시피 드롭다운 메뉴 */}
-                    <li 
-                        className="dropdown" 
-                        onMouseEnter={() => setIsDeckHovered(true)} 
-                        onMouseLeave={() => setIsDeckHovered(false)}
-                    >
-                        <Link to='/deckmaker' className="dropdown-title">덱 레시피</Link>
-                        {isDeckHovered && (
-                            <ul className="dropdown-menu">
-                                <li><Link to='/deckRecipes'>덱 목록</Link></li>
-                                <li><Link to='/deckmaker'>덱 만들기</Link></li>
-                            </ul>
-                        )}
-                    </li>
-
-                    <li><Link to='/simulator'>카드 뽑기 시뮬레이터</Link></li>
-                    <li><Link to='/search'>검색</Link></li>
-                    
-                    {userName ? (
+            <div className="header-inner">
+                <div className='left'>
+                    <Link to='/' className="logo">
+                        {/* 로고 자리 */}
+                        <span className="logo-text">PokeArch</span>
+                    </Link>
+                </div>
+                
+                <div className='right'>
+                    <ul className="nav-list">
+                        <li><Link to='/series/list'>확장팩</Link></li>
+                        
                         <li 
                             className="dropdown" 
-                            onMouseEnter={() => setIsUserHovered(true)} 
-                            onMouseLeave={() => setIsUserHovered(false)}
+                            onMouseEnter={() => setIsDeckHovered(true)} 
+                            onMouseLeave={() => setIsDeckHovered(false)}
                         >
-                            <span className="user-name" style={{ color: '#ffcb05', fontWeight: 'bold', cursor: 'pointer' }}>
-                                {userName} ▼
-                            </span>
-                            {isUserHovered && (
+                            <Link to='/deckmaker' className="nav-item">덱 레시피</Link>
+                            {isDeckHovered && (
                                 <ul className="dropdown-menu">
-                                    <li><Link to='/mypage/my-decks'>내가 만든 덱</Link></li>
-                                    <li><Link to='/mypage/scrapped-decks'>스크랩한 덱</Link></li>
-                                    <li><Link to='/mypage/liked-cards'>좋아요한 카드</Link></li>
-                                    <li><button onClick={handleLogout} className="logout-btn">로그아웃</button></li>
+                                    <li><Link to='/deckRecipes'>덱 목록</Link></li>
+                                    <li><Link to='/deckmaker'>덱 만들기</Link></li>
                                 </ul>
                             )}
                         </li>
-                    ) : (
-                        <li><Link to='/login'>로그인</Link></li>
-                    )}
-                </ul>
+
+                        <li><Link to='/simulator'>시뮬레이터</Link></li>
+                        <li><Link to='/search'>검색</Link></li>
+                        
+                        {userName ? (
+                            <li 
+                                className="dropdown" 
+                                onMouseEnter={() => setIsUserHovered(true)} 
+                                onMouseLeave={() => setIsUserHovered(false)}
+                            >
+                                <span className="user-name nav-item">
+                                    {userName} ▼
+                                </span>
+                                {isUserHovered && (
+                                    <ul className="dropdown-menu">
+                                        <li><Link to='/mypage/my-decks'>내가 만든 덱</Link></li>
+                                        <li><Link to='/mypage/scrapped-decks'>스크랩한 덱</Link></li>
+                                        <li><Link to='/mypage/liked-cards'>좋아요한 카드</Link></li>
+                                        <li className="divider"></li>
+                                        <li><button onClick={handleLogout} className="logout-btn">로그아웃</button></li>
+                                    </ul>
+                                )}
+                            </li>
+                        ) : (
+                            <li><Link to='/login' className="login-btn">로그인</Link></li>
+                        )}
+                    </ul>
+                </div>
             </div>
         </header>
     )
