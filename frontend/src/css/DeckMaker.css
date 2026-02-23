@@ -1,122 +1,271 @@
-#DeckMaker{
-    padding-top: 60px;
-    width: 1200px;
+#DeckMaker {
+    padding: 120px 20px 80px;
+    max-width: 1400px;
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 40px;
+    align-items: flex-start;
 }
-#DeckMaker .newDeck{
-    margin-bottom: 40px;
+
+.deck-info-section {
+    position: sticky;
+    top: 120px;
 }
-#DeckMaker .newDeck h2{
-    margin-bottom: 10px;
+
+.deck-info-section .info-box {
+    background: white;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.03);
 }
-#DeckMaker .newDeck .save-button {
-    background-color: #ccc;
-    color: white;
-    padding: 8px 16px;
+
+.deck-info-section h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: var(--text-main);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-sub);
+    margin-bottom: 8px;
+}
+
+.input-group input, 
+.input-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background: #f8f9fa;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.input-group textarea {
+    height: 120px;
+    resize: none;
+}
+
+.input-group input:focus, 
+.input-group textarea:focus {
+    background: white;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(9, 132, 227, 0.1);
+}
+
+.count-display {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f1f2f6;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.count-display strong {
+    color: var(--accent);
+    font-size: 1.2rem;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1rem;
     border: none;
-    border-radius: 4px;
-    cursor: not-allowed;
-    margin-bottom: 15px;
-}
-#DeckMaker .newDeck .save-button.active {
-    background-color: #ff0000;
     cursor: pointer;
+    background: #dfe6e9;
+    color: #b2bec3;
+    transition: all 0.3s;
 }
-#DeckMaker .newDeck ul{
+
+.save-btn:not(:disabled) {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3);
+}
+
+.save-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(9, 132, 227, 0.4);
+}
+
+.deck-builder-main {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+    flex-direction: column;
+    gap: 40px;
 }
-#DeckMaker .newDeck ul li{
-    width: 112px;
-    height: 160px;
-    border: 1px dashed #d6d6d6;
-    border-radius: 4%;
+.newDeck {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+.newDeck h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--text-main);
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
-#DeckMaker .newDeck ul li img {
+
+.newDeck ul {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+}
+
+.newDeck ul li {
+    width: 100%;
+    aspect-ratio: 240 / 335;
+    border-radius: 8px;
+    background: white;
+    border: 1px dashed #dfe6e9;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.newDeck ul li.empty {
+    border: 2px dashed #dfe6e9;
+}
+
+.newDeck ul li.filled {
+    border: 1px solid #eee;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.newDeck ul li img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-}
-#DeckMaker .newDeck ul li.filled {
-    border-style: solid;
-    border-color: #eee;
-}
-#DeckMaker .newDeck ul li.empty {
-    border-style: dashed;
-    border-color: #eee;
-}
-#DeckMaker .searchCard{
-    display: flex;
-    align-items: center;
-}
-#DeckMaker .searchCard .searchBar input{
-    border: 1px solid #d6d6d6;
-    border-radius: 4px;
-    line-height: 28px;
-    padding-left: 6px;
-    margin-right: 10px;
-}
-#DeckMaker .searchCard .selectOpts select{
-    border: 1px solid #d6d6d6;
-    border-radius: 4px;
-    margin-right: 6px;
-    padding-right: 8px;
-    height: 20px;
-    color: #2e2e2e;
-}
-#DeckMaker .cardLists {
-    max-height: 600px;
-    overflow-y: auto;
-    border: 1px solid #eee;
-    border-radius: 16px;
-    padding: 10px;
-    margin-top: 20px;
+    cursor: pointer;
 }
 
-#DeckMaker .cardLists ul {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-}
-.newDeck li.filled {
-    position: relative; /* 버튼 배치를 위해 필요 */
-}
-
-/* 대표 설정 버튼 스타일 */
 .rep-btn {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid #ddd;
+    top: 5px; right: 5px;
+    width: 28px; height: 28px;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    font-size: 16px;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #eee;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
     transition: all 0.2s;
-    z-index: 5;
-}
-
-.rep-btn:hover {
-    background: #fff;
-    transform: scale(1.1);
 }
 
 .rep-btn.active {
-    background: #ffcb05; /* 포켓몬 노란색 */
+    background: #ffcb05;
     color: #2a75bb;
-    border-color: #2a75bb;
+    border-color: #ffcb05;
 }
 
-/* 대표 카드로 선택된 카드의 테두리 강조 */
-.newDeck li.filled:has(.rep-btn.active) {
-    border: 3px solid #ffcb05;
-    box-shadow: 0 0 8px rgba(255, 203, 5, 0.6);
+.searchCard {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+.searchBar input {
+    min-width: 250px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.selectOpts select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    background: white;
+    font-weight: 600;
+}
+
+.cardLists {
+    background: white;
+    padding: 25px;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.cardLists ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    list-style: none;
+}
+
+.cardLists li {
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.cardLists li img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.cardLists li p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.cardLists li:hover {
+    transform: translateY(-8px);
+}
+
+.loadMoreBtn {
+    display: block;
+    margin: 30px auto 10px;
+    padding: 10px 30px;
+    background: #f1f2f6;
+    color: var(--text-sub);
+    border-radius: 20px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+.cardLists::-webkit-scrollbar { width: 8px; }
+.cardLists::-webkit-scrollbar-track { background: transparent; }
+.cardLists::-webkit-scrollbar-thumb { background: #dfe6e9; border-radius: 10px; }
+
+@media (max-width: 1100px) {
+    #DeckMaker {
+        grid-template-columns: 1fr;
+    }
+    .deck-info-section {
+        position: static;
+    }
 }

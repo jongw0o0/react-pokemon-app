@@ -335,7 +335,7 @@ const DeckMaker = ({seriesData, cardSeries}) => {
 
             <div className="deck-builder-main">
                 <div className='newDeck'>
-                    <h2>새로운 덱 구성</h2>
+                    <h2>{deckName ? deckName : "새로운 덱 구성"}</h2>
                     <ul>
                         {selectedCards.map((card, idx) => (
                             <li key={`selected-${idx}`} className="filled">
@@ -348,9 +348,8 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                                 <button 
                                     className={`rep-btn ${representativeCardId === card.id ? 'active' : ''}`}
                                     onClick={(e) => {
-                                        e.stopPropagation(); // 클릭 시 삭제 이벤트가 발생하는 것을 방지
+                                        e.stopPropagation();
                                         
-                                        // 이미지 주소 조립
                                         const cardId = card.id;
                                         const lastIndex = cardId.lastIndexOf("-");
                                         const formattedPath = (lastIndex !== -1) 
@@ -358,8 +357,8 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                                             : cardId;
                                         const finalUrl = `https://assets.tcgdex.net/en/tcgp/${formattedPath}/low.png`;
 
-                                        setRepresentativeCardId(card.id); // 아이디 저장 (UI 표시용)
-                                        setRepresentativeImgUrl(finalUrl);  // 실제 저장용 URL 저장
+                                        setRepresentativeCardId(card.id);
+                                        setRepresentativeImgUrl(finalUrl);
                                     }}
                                 >
                                     {representativeCardId === card.id ? '★' : '☆'}
@@ -417,7 +416,6 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                     <ul>
                         {visibleCards.map((card) => (
                             <li key={card.id} onClick={() => handleCardClick(card)}>
-                                {/* /low.webp를 붙여 저용량으로 호출, lazy 로딩으로 브라우저 부하 방지 */}
                                 <img src={`${card.image}/low.webp`} alt={card.name} loading="lazy" />
                                 <p>{card.name}</p>
                             </li>

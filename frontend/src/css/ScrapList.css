@@ -1,0 +1,24 @@
+.recipe-board-container {
+    padding-top: 110px !important; 
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.empty-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 100px 0;
+    color: #888;
+}
+
+.go-recipes-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ffcb05;
+    color: #1a1a1a;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+}

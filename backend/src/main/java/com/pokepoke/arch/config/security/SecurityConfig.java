@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/decks/me").authenticated()
                         .requestMatchers("/api/main/**", "/api/members/login", "/api/members/join").permitAll()
                         .requestMatchers("/api/members/login", "/api/members/join").permitAll()
+                        .requestMatchers("/api/cards/**").permitAll()
                         .requestMatchers("/api/saveDeck").permitAll()
                         .requestMatchers("/img/**", "/**/*.html", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/login/oauth2/**").permitAll()

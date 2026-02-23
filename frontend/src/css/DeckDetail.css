@@ -1,13 +1,14 @@
 #DeckDetail {
-    padding: 110px 0px 60px;
+    padding: 130px 20px 60px;
     width: 100%;
-    max-width: 100%; /* 부모(main) 너비에 맞춤 */
+    max-width: 1200px;
     margin: 0 auto;
     box-sizing: border-box;
-    color: var(--text-main);
+    overflow: hidden;
 }
 
 .deck-detail-header {
+    width: 100%;
     margin-bottom: 40px;
     border-bottom: 1px solid #eee;
     padding-bottom: 20px;
@@ -18,140 +19,114 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    margin-bottom: 20px;
 }
 
-.header-content h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
+.owner-actions {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.edit-btn, .delete-btn, .back-btn, .scrap-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid #eee;
+    background: white;
+}
+
+.delete-btn { color: #e74c3c; }
+.delete-btn:hover { background: #fff5f5; border-color: #e74c3c; }
+
+.edit-btn { color: #3498db; }
+.edit-btn:hover { background: #f0f8ff; border-color: #3498db; }
+
+.title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin: 10px 0;
 }
-
-.deck-detail-header h2 {
-    font-size: 2.2rem;
+.title-wrapper h1 {
+    font-size: 2.5rem;
     font-weight: 800;
-    color: var(--text-main);
     margin: 0;
 }
-.deck-meta {
-    margin-bottom: 10px;
-    color: var(--text-sub);
-}
-
-.deck-desc {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: var(--text-sub);
-}
-.back-btn {
-    background: #fff;
+.scrap-btn {
+    background: none;
     border: 1px solid #ddd;
-    color: var(--text-sub);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     cursor: pointer;
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.2s;
-    margin-bottom: 15px;
+    transition: 0.2s;
+    background: white;
 }
 
-.back-btn:hover {
-    background: #f8f9fa;
-    border-color: var(--accent);
-    color: var(--accent);
+.scrap-btn.active {
+    border-color: #ff7675;
+    background: #fff5f5;
 }
-
 .deck-detail-content {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 40px;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
     width: 100%;
-    align-items: flex-start;
+}
+.rep-card-img {
+    width: 100%;
+    max-width: 240px;
+    /* border-radius: 15px; */
 }
 
 .representative-section {
-    width: 320px;
+    width: 280px;
     position: sticky;
-    top: 110px;
-    z-index: 10;
-    background-color: transparent;
-}
-
-.rep-card-img {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-width: 350px;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s;
-}
-
-.rep-card-img:hover {
-    transform: scale(1.02) rotate(-1deg);
+    top: 130px;
 }
 
 .card-grid-section {
-    width: 100%;
+    flex: 1;
     min-width: 0;
 }
 
 .deck-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+    gap: 10px;
+    width: 100%;
 }
 
-.card-wrapper {
+.grid-item {
+    width: 100%;
     position: relative;
-    transition: transform 0.2s;
-}
-
-.card-wrapper:hover {
-    transform: translateY(-8px);
-    z-index: 5;
+    background: none !important;
+    box-shadow: none !important;
+    /* border: none !important; */
 }
 
 .grid-item img {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 8px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    height: auto;
+    display: block;
+    /* border-radius: 5px; */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); 
 }
-
+.card-wrapper {
+    background: none !important;
+    box-shadow: none !important;
+}
 .card-count-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: var(--accent);
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: 800;
-    border: 2px solid white;
-}
-
-.scrap-btn {
-    padding: 10px 24px;
-    border: 2px solid var(--accent);
-    background: transparent;
-    color: var(--accent);
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 700;
-    transition: all 0.2s;
-}
-
-.scrap-btn:hover {
-    background: rgba(9, 132, 227, 0.05);
-}
-
-.scrap-btn.active {
-    background: var(--accent);
-    color: #fff;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    top: -3px;
+    right: -3px;
 }

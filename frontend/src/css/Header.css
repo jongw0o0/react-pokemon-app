@@ -15,13 +15,23 @@
 .header-inner {
     width: 100%;
     max-width: 1400px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     padding: 0 40px;
+    box-sizing: border-box;
 }
 
-/* 로고 스타일 */
+#Header .left {
+    flex-shrink: 0;
+}
+
+#Header .right {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
 .logo-text {
     font-size: 1.5rem;
     font-weight: 800;
@@ -31,11 +41,14 @@
     letter-spacing: -1px;
 }
 
-/* 네비게이션 공통 */
 .nav-list {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
     align-items: center;
-    gap: 10px;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .nav-list > li {
@@ -45,7 +58,6 @@
     position: relative;
 }
 
-/* 메뉴 텍스트 스타일 */
 .nav-item, .nav-list li > a {
     padding: 0 15px;
     color: var(--text-main);
@@ -59,7 +71,6 @@
     color: var(--accent);
 }
 
-/* 드롭다운 메뉴 위치 및 끊김 방지 */
 .dropdown-menu {
     position: absolute;
     top: 65px;
@@ -75,7 +86,6 @@
     animation: dropdownFade 0.2s ease-out;
 }
 
-/* 메뉴와 드롭다운 사이의 투명한 다리 */
 .dropdown::after {
     content: "";
     position: absolute;
@@ -90,7 +100,6 @@
     to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* 나머지 버튼 및 유틸 스타일 */
 .login-btn {
     background-color: var(--accent);
     color: white !important;

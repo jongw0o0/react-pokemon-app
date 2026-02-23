@@ -11,10 +11,12 @@ import com.pokepoke.arch.dto.DeckDetailDto;
 import com.pokepoke.arch.dto.DeckInfoDto;
 import com.pokepoke.arch.entity.Deck;
 import com.pokepoke.arch.entity.DeckCard;
+import com.pokepoke.arch.entity.DeckScrap;
 import com.pokepoke.arch.entity.Member;
 import com.pokepoke.arch.mapper.DeckInfoMapper;
 import com.pokepoke.arch.repository.DeckCardRepository;
 import com.pokepoke.arch.repository.DeckRepository;
+import com.pokepoke.arch.repository.DeckScrapRepository;
 import com.pokepoke.arch.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class DeckService {
     private final DeckRepository deckRepository;
     private final DeckCardRepository deckCardRepository;
     private final MemberRepository memberRepository;
+    private final DeckScrapRepository scrapRepository;
 
     private final DeckInfoMapper deckInfoMapper;
 
@@ -117,7 +120,18 @@ public class DeckService {
                 .collect(Collectors.toList());
     }
 
-    public DeckDetailDto getDeckDetail(Long deckId) {
+    // 특정 유저가 스크랩한 덱 목록 조회
+    public List<DeckInfoDto> getScrappedDecks(Long memberId) {
+        // memberId로 DeckScrap 테이블에서 해당 유저의 데이터들 조회
+        // 조회된 DeckScrap에서 Deck 엔티티만 추출하여 DTO로 변환
+        List<DeckScrap> scraps = scrapRepository.findByMemberId(memberId);
+        
+        return scraps.stream()
+                .map(scrap -> deckInfoMapper.entityToDto(scrap.getDeck()))
+                .collect(Collectors.toList());
+    }
+
+    public DeckDetailDto getDeckDetail(Long deckId, Long currentMemberId) {
         Deck deck = deckRepository.findById(deckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 덱입니다."));
 
@@ -138,6 +152,13 @@ public class DeckService {
 
         // 매퍼 사용
         DeckDetailDto dto = deckInfoMapper.entityToDetailDto(deck, apiCardIds);
+
+        if (currentMemberId != null) {
+        boolean isScrapped = scrapRepository.existsByMemberIdAndDeckId(currentMemberId, deckId);
+        dto.setScrapped(isScrapped);
+    } else {
+        dto.setScrapped(false);
+    }
 
         return dto;
     }

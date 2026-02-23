@@ -354,7 +354,7 @@ const DeckEdit = ({seriesData, cardSeries}) => {
 
             <div className="deck-builder-main">
                 <div className='newDeck'>
-                    <h2>새로운 덱 구성</h2>
+                    <h2>{deckName ? deckName : "새로운 덱 구성"}</h2>
                     <ul>
                         {selectedCards.map((card, idx) => (
                             <li key={`selected-${idx}`} className="filled">

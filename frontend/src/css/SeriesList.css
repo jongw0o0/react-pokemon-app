@@ -1,41 +1,100 @@
-#SeriesList{
-    padding-top: 60px;
-    width: 1200px;
+#SeriesList {
+    padding: 120px 20px 80px;
+    max-width: 1300px;
     margin: 0 auto;
 }
-#SeriesList ul{
+
+.series-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.series-header .title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.series-header .subtitle {
+    color: var(--text-sub);
+    font-size: 1.1rem;
+}
+
+.series-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.series-card {
+    background-color: var(--bg-card);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    text-decoration: none;
+}
+
+.series-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.logo-wrapper {
+    height: 180px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    /* width: max-content;  */
-    /* margin: 0 auto; */
+    padding: 30px;
+    position: relative;
 }
-#SeriesList ul li{
-    /* padding: 20px 8px 0 8px; */
-    width: 200px;
-    height: 200px;
-    border: 1px solid #d6d6d6;
-    border-radius: 10%;
-    text-align: center;
+
+.series-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+    transition: transform 0.4s;
 }
-#SeriesList ul li:hover{
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+
+.series-card:hover .series-logo {
+    transform: scale(1.1) rotate(-2deg);
 }
-#SeriesList ul li button {
-    margin: 20px 8px;
+
+.info-wrapper {
+    padding: 25px;
+    text-align: left;
 }
-#SeriesList ul li button img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
-    margin-bottom: 20px;
-    color: black;
+
+.series-id {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--accent);
+    background: rgba(9, 132, 227, 0.1);
+    padding: 4px 10px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 12px;
 }
-#SeriesList ul li button p{
-    font-size: 14px;
+
+.series-name {
+    font-size: 1.3rem;
     font-weight: 700;
-    color: black;
+    color: var(--text-main);
+    margin-bottom: 15px;
+}
+
+.view-more {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    transition: color 0.2s;
+}
+
+.series-card:hover .view-more {
+    color: var(--accent);
 }

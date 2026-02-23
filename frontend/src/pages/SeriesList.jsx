@@ -20,22 +20,26 @@ const SeriesList = ({seriesData, cardSeries}) => {
     console.log(seriesData)
     return(
         <div id="SeriesList">
-            <ul>
+            <header className="series-header">
+                <h1 className="title">확장팩 목록</h1>
+                <p className="subtitle">포켓몬 카드 게임 데이터 포켓의 다양한 시리즈를 탐색해보세요.</p>
+            </header>
+            <div className="series-grid">
                 {cardSeries.map((set, index) => (
-                    <li key={set.id} className={set.name}>
-                        <button>
-                            <Link to={`/series/detail/${index}`}>
-                                <img src={`${set.logo}.webp`} alt={set.name} />
-                                <p>{set.name}</p>
-                            </Link>
-                        </button>
-                    </li>
+                    <Link to={`/series/detail/${index}`} key={set.id} className="series-card">
+                        <div className="card-inner">
+                            <div className="logo-wrapper">
+                                <img src={`${set.logo}.webp`} alt={set.name} className="series-logo" />
+                            </div>
+                            <div className="info-wrapper">
+                                <span className="series-id">{set.id.toUpperCase()}</span>
+                                <h3 className="series-name">{set.name}</h3>
+                                <div className="view-more">카드 보기 →</div>
+                            </div>
+                        </div>
+                    </Link>
                 ))}
-            </ul>
-
-            {/* <img src={`${cardSeries[1].logo}.webp`} alt={cardSeries[0].name}/>
-            {A1[0].name}
-            <img src={`${A1[0].image}/high.webp`} alt={A1[0].name} /> */}
+            </div>
         </div>
     )
 }

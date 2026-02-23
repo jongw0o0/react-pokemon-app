@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import TCGdex from "@tcgdex/sdk";
 import { Header, Footer } from './components';
-import { CardDetail, Login, Join, MainPage, SearchPage, DeckMaker, DeckDetail, DeckEdit, DeckRecipeBoard, Search, CardSimulator } from './pages';
+import { CardDetail, Login, Join, MainPage, SearchPage, DeckMaker, DeckDetail, DeckEdit, DeckRecipeBoard, Search, CardSimulator, ScrapList, MyDeckList } from './pages';
 import { SeriesRoutes } from './routes';
 import './App.css'
 import axios from 'axios';
@@ -61,29 +61,18 @@ const App = () => {
             <Route element={<Login />} path='/login' />
             <Route element={<Join />} path='/join' />
             <Route element={<CardSimulator /> } path='/simulator' />
-            {/* <Route element={<SearchPage /> } path='/search' /> */}
             <Route element={<DeckMaker seriesData={seriesData} cardSeries={cardSeries} /> } path='/deckmaker' />
             <Route element={<DeckRecipeBoard /> } path='/deckRecipes' />
             <Route element={<DeckDetail />} path='/deck/:deckId' />
             <Route element={<DeckEdit seriesData={seriesData} cardSeries={cardSeries} />} path='/deck/edit/:deckId' />
             <Route element={<SeriesRoutes seriesData={seriesData} cardSeries={cardSeries} />} path='/series/*' />
             <Route element={<Search cardSeries={cardSeries} />} path='/search' />
+            <Route element={<ScrapList />} path="/mypage/scrapped-decks" />
+            <Route element={<MyDeckList />} path="/mypage/my-decks" />
             <Route element={<CardDetail /> } path='card/:id' />
           </Route>
         </Routes>
       </BrowserRouter>
-      {/* {Object.entries(seriesData).map(([setId, cards]) => (
-        <div key={setId}>
-          <h2>{setId}</h2>
-          <ul>
-            {cards.map((card) => (
-              <li key={card.id}>
-                {card.id} — {card.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))} */}
     </>
   )
 }

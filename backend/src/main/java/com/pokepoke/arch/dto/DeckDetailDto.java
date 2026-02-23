@@ -2,8 +2,6 @@ package com.pokepoke.arch.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +15,5 @@ public class DeckDetailDto {
     private List<String> apiCardIds; 
     private String representativeCardId;
     private String representativeImageUrl;
+    private boolean isScrapped;
 }

@@ -20,9 +20,10 @@
     width: 100%;
     animation: fadeIn 0.6s ease-out;
 }
-.content-area {
+/* .content-area {
     width: 100%;
-}
+    animation: fadeIn 0.6s ease-out;
+} */
 .container-sm {
     max-width: 500px;
     margin: 0 auto;
@@ -35,6 +36,6 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-#Layout > main {
+/* #Layout > main {
     animation: fadeIn 0.6s ease-out;
-}
+} */

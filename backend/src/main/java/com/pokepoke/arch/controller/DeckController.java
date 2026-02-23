@@ -104,9 +104,14 @@ public class DeckController {
     }
 
     @GetMapping("/decks/{deckId}")
-    public ResponseEntity<?> getDeckDetail(@PathVariable("deckId") Long deckId) {
+    public ResponseEntity<?> getDeckDetail(@PathVariable("deckId") Long deckId, Principal principal) {
         try {
-            DeckDetailDto deckDetail = deckService.getDeckDetail(deckId);
+            Long currentMemberId = null;
+            if (principal != null) {
+                Member member = memberService.findByLoginId(principal.getName());
+                currentMemberId = member.getId();
+            }
+            DeckDetailDto deckDetail = deckService.getDeckDetail(deckId, currentMemberId);
             return ResponseEntity.ok(deckDetail);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

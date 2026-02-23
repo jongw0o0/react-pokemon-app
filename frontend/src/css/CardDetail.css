@@ -1,46 +1,199 @@
-#CardDetail{
-    padding-top: 60px;
-    width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    gap: 40px;
-    justify-content: space-between;
-}
-#CardDetail .left{
-    width: 40%;
-}
-#CardDetail .left .imgWrap img{
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    object-position: center center;
+#CardDetail {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding: 120px 20px 60px;
+    overflow: hidden;
 }
 
-#CardDetail .right{
-    width: 60%;
-    align-items: left;
+/* 배경 블러 */
+#CardDetail .card-bg-blur {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background-size: cover; background-position: center;
+    filter: blur(80px) brightness(0.8);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 1s ease;
+    pointer-events: none;
 }
-#CardDetail .right .cardName{
-    font-size: 32px;
-    font-weight: 700;
+#CardDetail .card-bg-blur.loaded { 
+    opacity: 0.15; 
 }
-#CardDetail .right .cardDesc{
-    font-size: 18px;
-    color: #686868;
+
+.card-loading-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh; color: var(--text-sub);
+}
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0,0,0,0.1);
+    border-top: 4px solid var(--accent); 
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
     margin-bottom: 20px;
 }
-#CardDetail .right .cardInfo > div{
-    margin-bottom: 14px;
+@keyframes spin { to { transform: rotate(360deg); } }
+.fade-in-content { animation: fadeIn 0.6s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 레이아웃 */
+.detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
 }
-#CardDetail .right .cardInfo div .title{
-    font-size: 16px;
-    font-weight: 500;
+.content-wrapper {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
 }
-#CardDetail .right .cardInfo div .content{
-    color: #686868;
+
+/* 카드 비주얼 (Tilt & Shine) */
+.left {
+    flex: 0 0 420px;
 }
-#CardDetail .right .cardInfo div .content.name{
-    font-size: 15px;
-    font-weight: 500;
-    color: #5e5e5e;
+.card-visual-wrap {
+    width: 100%;
+    position: sticky;
+    top: 120px;
+    cursor:
+    pointer;
+}
+.main-card-img {
+    width: 100%;
+    border-radius: 18px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+}
+.shine-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 18px;
+    z-index: 2;
+    background: radial-gradient(circle at var(--x) var(--y), rgba(255,255,255,0.4) 0%, transparent 50%);
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.card-visual-wrap:hover .shine-layer {
+    opacity: 1;
+}
+
+/* 정보 텍스트 */
+.right {
+    flex: 1;
+    color: var(--text-main); 
+}
+.rarity-tag {
+    background: var(--accent);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+#CardDetail .card-name {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 15px 0 10px;
+    letter-spacing: -1.5px;
+}
+.like-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 5px;
+}
+
+.like-btn:hover {
+    transform: scale(1.2);
+}
+
+.like-btn.active {
+    color: #e74c3c;
+    animation: heartbeat 0.3s ease;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1.2); }
+}
+.card-desc {
+    font-style: italic;
+    color: var(--text-sub);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+/* 스펙 박스 */
+.stats-grid {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.stat-box {
+    background: white;
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.stat-box .label {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    display: block;
+}
+.stat-box .val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+/* 기술 & 메타 */
+.detail-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.ability-card, .attack-card, .trainer-effect {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.atk-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.damage {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+.footer-meta {
+    display: flex;
+    gap: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+.meta-item .label {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    display: block;
+}
+
+@media (max-width: 1000px) {
+    .content-wrapper { flex-direction: column; align-items: center; }
+    .left { flex: none; width: 100%; max-width: 320px; }
+    .card-visual-wrap { position: static; }
 }

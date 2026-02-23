@@ -1,116 +1,171 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { TiltCard } from "../components";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";  
 import TCGdex from "@tcgdex/sdk";
-import '../css/CardDetail.css'
-
+import '../css/CardDetail.css';
 
 const RARE_LIST = [
-    {value : 'None', name : 'None(PROMO)'},
-    {value : 'One Diamond', name : '♦︎'},
-    {value : 'Two Diamond', name : '♦︎♦︎'},
-    {value : 'Three Diamond', name : '♦︎♦︎♦︎'},
-    {value : 'Four Diamond', name : '♦︎♦︎♦︎♦︎'},
-    {value : 'One Star', name : '⭐'},
-    {value : 'Two Star', name : '⭐⭐'},
-    {value : 'Three Star', name : '⭐⭐⭐'},
-    {value : 'One Shiny', name : '✨'},
-    {value : 'Two Shiny', name : '✨✨'},
-    {value : 'Crown', name : '👑'},
+    {value : 'One Diamond', name : '♦︎'}, {value : 'Two Diamond', name : '♦︎♦︎'},
+    {value : 'Three Diamond', name : '♦︎♦︎♦︎'}, {value : 'Four Diamond', name : '♦︎♦︎♦︎♦︎'},
+    {value : 'One Star', name : '⭐'}, {value : 'Two Star', name : '⭐⭐'},
+    {value : 'Three Star', name : '⭐⭐⭐'}, {value : 'One Shiny', name : '✨'},
+    {value : 'Two Shiny', name : '✨✨'}, {value : 'Crown', name : '👑'},
+    {value : 'None', name : 'PROMO'}
 ];
-
 
 const CardDetail = () => {
     const { id } = useParams();
-    const [card, setCard] = useState({});
+    const navigate = useNavigate();
+    const [card, setCard] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const currentUserId = localStorage.getItem("memberId") || "guest";
+    const [isLiked, setIsLiked] = useState(false);
 
     useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            const memberId = localStorage.getItem("memberId");
+
+            try {
+                const sdk = new TCGdex('en');
+                const res = await sdk.fetch('cards', id);
+                setCard(res);
+
+                if (memberId) {
+                    const likeRes = await fetch(`http://localhost:8000/api/cards/like/status?memberId=${memberId}&cardId=${id}`);
+                    if (likeRes.ok) {
+                        const isLikedStatus = await likeRes.json();
+                        setIsLiked(isLikedStatus);
+                    }
+                }
+            } catch (e) { 
+                console.error("데이터 로드 실패:", e); 
+            } finally { 
+                setLoading(false); 
+            }
+        };
         fetchData();
-    }, [id])
+    }, [id]);
 
-    const fetchData = async () => {
-        const sdk = new TCGdex('en');
-        try {
-            const res = await sdk.fetch('cards', id);
-            setCard(res)
-        } catch (e) {
-            console.error("Error fetching tcgp:", e);
+    const toggleLike = async () => {
+        const memberId = localStorage.getItem("memberId"); 
+        
+        if (!memberId) {
+            alert("로그인이 필요한 기능입니다!");
+            return;
         }
-    }
-    
-    const rarity = RARE_LIST.find(r => r.value === card.rarity)?.name || card.rarity;
 
-    console.log(card)
+        try {
+            await axios.post("http://localhost:8000/api/cards/like", {
+                memberId: Number(memberId),
+                cardId: id
+            });
+            
+            setIsLiked(!isLiked); 
+            
+        } catch (e) { 
+            console.error("좋아요 실패:", e); 
+        }
+    };
 
-    return(
+    // 마우스 위치에 따라 카드가 3D로 기울어지는 효과
+    const handleMouseMove = (e) => {
+        const el = e.currentTarget;
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        el.style.setProperty('--x', `${x}px`);
+        el.style.setProperty('--y', `${y}px`);
+        const xR = (y - rect.height / 2) / (rect.height / 2) * -10;
+        const yR = (x - rect.width / 2) / (rect.width / 2) * 10;
+        el.style.transform = `perspective(1000px) rotateX(${xR}deg) rotateY(${yR}deg)`;
+    };
+
+    const handleMouseLeave = (e) => {
+        e.currentTarget.style.transform = `perspective(1000px) rotateX(0) rotateY(0)`;
+    };
+
+    const rarity = card ? (RARE_LIST.find(r => r.value === card.rarity)?.name || card.rarity) : "";
+    const imgUrl = card?.image ? `${card.image}/high.webp` : "";
+
+    return (
         <div id="CardDetail">
-            <div className="left">
-                <div className="imgWrap">
-                    <img src={`${card.image}/high.webp`}/>
-                </div>
-            </div>
-            <div className="right">
-                <p className="cardName">{card.name}</p>
-                <p className="cardDesc">{card.description}</p>
-                <div className="cardInfo">
-                    {card.types && 
-                        <div>
-                            <p className="title">타입</p>
-                            <p className="content">{card.types}</p>
-                        </div>
-                    }
-                    {card.hp && 
-                        <div>
-                            <p className="title">HP</p>
-                            <p className="content">{card.hp}</p>
-                        </div>
-                    }
-                    {card.abilities && card.abilities.length > 0 &&
-                        <div>
-                            <p className="title">특성</p>
-                            <p className="content name">{card.abilities[0].name}</p>
-                            <p className="content">{card.abilities[0].effect}</p>
-                        </div>
-                    }
-                    {card.attacks && card.attacks.length > 0 && card.attacks.map((atk, idx) => 
-                        <div key={idx}>
-                            <p className="title">기술{idx + 1}</p>
-                            <p className="content name">{atk.name} </p>
-                            <p className="content">{atk.effect}</p>
-                            <p className="content">{atk.cost? atk.cost.length : 0}에너지({atk.cost ? atk.cost.join(', ') : '-'}) </p>
-                            {atk.damage ? <p className="content">{atk.damage}데미지</p> : ''}
-                        </div>
-                    )}
-                    {card.effect && 
-                        <div>
-                            <p className="title">효과</p>
-                            <p className="content">{card.effect}</p>
-                        </div>
-                    }
-                    {card.weaknesses && card.weaknesses.length > 0 && 
-                        <div>
-                            <p className="title">약점</p>
-                            <p className="content">{card.weaknesses[0].type} {card.weaknesses[0].value}</p>
-                        </div>
-                    }
-                    {(card.retreat || card.retreat === 0) &&  
-                        <div>
-                            <p className="title">후퇴</p>
-                            <p className="content">{card.retreat}</p>
-                        </div>
-                    }
-                    <div>
-                        <p className="title">일러스트</p>
-                        <p className="content">{card.illustrator}</p>
+            {/* 배경 레이어 */}
+            <div 
+                className={`card-bg-blur ${card ? 'loaded' : ''}`} 
+                style={{ backgroundImage: imgUrl ? `url(${imgUrl})` : 'none' }}
+            />
+            <div className="detail-container">
+                {loading ? (
+                    <div className="card-loading-wrapper">
+                        <div className="loading-spinner" />
+                        <p>데이터를 불러오는 중입니다...</p>
                     </div>
-                    <div>
-                        <p className="title">레어도</p>
-                        <p className="content">{rarity}</p>
+                ) : card ? (
+                    <div className="fade-in-content">
+                        <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로가기</button>
+                        <div className="content-wrapper">
+                            <div className="left">
+                                <div className="card-visual-wrap" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+                                    <img src={imgUrl} alt={card.name} className="main-card-img" />
+                                    <div className="shine-layer" />
+                                </div>
+                            </div>
+                            <div className="right">
+                                <header className="info-header">
+                                    <span className="rarity-tag">{rarity}</span>
+                                    <h1 className="card-name">{card.name}</h1>
+                                    <div className="card-header-row">
+                                        <h2>{card.name}</h2>
+                                        <button 
+                                            className={`like-btn ${isLiked ? 'active' : ''}`} 
+                                            onClick={toggleLike}
+                                        >
+                                            {isLiked ? '❤️' : '🤍'}
+                                        </button>
+                                    </div>
+                                    {card.description && <p className="card-desc">"{card.description}"</p>}
+                                </header>
+
+                                <section className="stats-grid">
+                                    {card.hp && <div className="stat-box"><span className="label">HP</span><span className="val">{card.hp}</span></div>}
+                                    {card.types && <div className="stat-box"><span className="label">Type</span><span className="val">{card.types}</span></div>}
+                                    {card.retreat !== undefined && <div className="stat-box"><span className="label">Retreat</span><span className="val">{card.retreat}</span></div>}
+                                </section>
+
+                                <section className="detail-sections">
+                                    {card.abilities?.map((a, i) => (
+                                        <div key={i} className="ability-card">
+                                            <span className="type-badge">Ability</span>
+                                            <h4>{a.name}</h4><p>{a.effect}</p>
+                                        </div>
+                                    ))}
+                                    {card.attacks?.map((a, i) => (
+                                        <div key={i} className="attack-card">
+                                            <div className="atk-header">
+                                                <div className="atk-left"><span>● {a.cost?.length || 0}</span><h4>{a.name}</h4></div>
+                                                {a.damage && <span className="damage">{a.damage}</span>}
+                                            </div>
+                                            {a.effect && <p className="effect">{a.effect}</p>}
+                                        </div>
+                                    ))}
+                                    {card.effect && <div className="trainer-effect"><h4>Effect</h4><p>{card.effect}</p></div>}
+                                </section>
+
+                                <footer className="footer-meta">
+                                    <div className="meta-item"><span className="label">Illustrator</span><span className="val">{card.illustrator}</span></div>
+                                    <div className="meta-item"><span className="label">Set</span><span className="val">{card.set?.name}</span></div>
+                                </footer>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="card-error">카드를 찾을 수 없습니다.</div>
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default CardDetail;

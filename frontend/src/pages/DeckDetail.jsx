@@ -29,8 +29,9 @@ const DeckDetail = () => {
         const fetchDeckDetail = async () => {
             try {
                 // 백엔드 상세 조회 API 호출
-                const response = await axios.get(`http://localhost:8000/api/decks/${deckId}`);
+                const response = await axios.get(`http://localhost:8000/api/decks/${deckId}`, { withCredentials: true });
                 setDeck(response.data);
+                setIsScrapped(response.data.scrapped);
             } catch (error) {
                 console.error("덱 정보를 불러오는 데 실패했습니다.", error);
                 alert("존재하지 않는 덱이거나 불러오기에 실패했습니다.");
@@ -56,16 +57,13 @@ const DeckDetail = () => {
     }, [deck]);
 
     const handleDelete = async () => {
-        // 1. 사용자에게 한 번 더 물어보기 (실수 방지)
         if (window.confirm("정말로 이 덱 레시피를 삭제하시겠습니까?")) {
             try {
-                // 2. 백엔드 삭제 API 호출
                 await axios.delete(`http://localhost:8000/api/decks/${deckId}`, {
                     withCredentials: true 
                 });
                 alert("성공적으로 삭제되었습니다.");
                 
-                // 3. 삭제 후 목록 페이지로 이동
                 navigate('/deckRecipes'); 
             } catch (error) {
                 console.error("삭제 실패:", error);
@@ -80,15 +78,14 @@ const DeckDetail = () => {
             alert("로그인 후 이용 가능합니다.");
             return;
         }
-        setIsScrapped(!isScrapped); // UI 즉시 반영 (낙관적 업데이트)
-        // try {
-        //     // 백엔드: ScrapController에서 처리 (memberId, deckId 전송)
-        //     await axios.post(`http://localhost:8000/api/decks/${deckId}/scrap`, {}, { withCredentials: true });
-        //     setIsScrapped(!isScrapped); // 상태 토글
-        //     alert(isScrapped ? "스크랩이 취소되었습니다." : "덱을 스크랩했습니다!");
-        // } catch (error) {
-        //     console.error("스크랩 오류:", error);
-        // }
+        // setIsScrapped(!isScrapped);
+        try {
+            await axios.post(`http://localhost:8000/api/decks/${deckId}/scrap`, {}, { withCredentials: true });
+            setIsScrapped(!isScrapped);
+            alert(isScrapped ? "스크랩이 취소되었습니다." : "덱을 스크랩했습니다!");
+        } catch (error) {
+            console.error("스크랩 오류:", error);
+        }
     };
 
     // 덱 정보가 있을 때만 실행
@@ -108,25 +105,29 @@ const DeckDetail = () => {
             <header className="deck-detail-header">
                 <div className="header-top-actions">
                     <button className="back-btn" onClick={() => navigate(-1)}>← 뒤로가기</button>
-                    {isOwner && (
-                        <div className="owner-actions">
-                            <button className="edit-btn" onClick={() => navigate(`/deck/edit/${deckId}`)}>수정</button>
-                            <button className="delete-btn" onClick={handleDelete}>삭제</button>
-                        </div>
-                    )}
-                    <button 
-                        className={`scrap-btn ${isScrapped ? 'active' : ''}`} 
-                        onClick={handleScrap}
-                    >
-                        {isScrapped ? '스크랩 됨' : '덱 스크랩'}
-                    </button>
+                    <div className="owner-actions">
+                        {isOwner && (
+                            <>
+                                <button className="edit-btn" onClick={() => navigate(`/deck/edit/${deckId}`)}>수정</button>
+                                <button className="delete-btn" onClick={handleDelete}>삭제</button>
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="header-content">
-                    <h1>{deck.deckName}</h1>
-                    <div className="deck-meta">
-                        <span className="author">By. <strong>{deck.userName}</strong></span>
+                    <div className="title-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <h1>{deck.deckName}</h1>    
+                        <button 
+                            className={`scrap-btn ${isScrapped ? 'active' : ''}`} 
+                            onClick={handleScrap}
+                        >
+                            {isScrapped ? '❤️' : '🤍'}
+                        </button>
                     </div>
-                    <p className="deck-desc">{deck.deckComment || "등록된 설명이 없습니다."}</p>
+                    <div className="deck-meta">
+                        <span className="deck-author">작성자: {deck.userName}</span>
+                    </div>
+                    <p className="deck-desc">{deck.deckComment}</p>
                 </div>
             </header>
             <div className="deck-detail-content">

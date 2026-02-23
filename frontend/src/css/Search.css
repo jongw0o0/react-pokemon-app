@@ -1,166 +1,237 @@
-/* SearchPage 전용 레이아웃 설정 */
 #SearchPage {
-    padding-top: 60px;
-    width: 1200px;
+    padding: 120px 20px 80px;
+    max-width: 1400px;
     margin: 0 auto;
-    color: white; /* 글자색이 안 보일 수 있으니 추가 */
+    min-height: 100vh;
 }
 
-/* 카드 리스트 영역 (DeckMaker 쌀먹) */
-#SearchPage .cardLists {
-    max-height: 800px; /* 도감이니까 좀 더 시원하게 늘려줍니다 */
-    overflow-y: auto;
-    border: 1px solid #444;
-    border-radius: 16px;
-    padding: 20px;
-    margin-top: 20px;
-    background-color: #1a1a1a;
-}
-
-/* ⭐ 여기가 핵심: 4열 그리드 설정 */
-#SearchPage .cardLists ul {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 20px;
-    list-style: none;
-    padding: 0;
-}
-
-#SearchPage .cardLists ul li {
-    background: #2a2a2a;
-    padding: 10px;
-    border-radius: 10px;
+.search-header {
     text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s;
+    margin-bottom: 50px;
 }
 
-#SearchPage .cardLists ul li:hover {
-    transform: translateY(-5px);
-    border: 1px solid #ffcb05;
+.search-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 10px;
 }
 
-#SearchPage .cardLists ul li img {
-    width: 100%;
-    border-radius: 5px;
+.search-header p {
+    color: var(--text-sub);
 }
 
-#SearchPage .cardLists ul li p {
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-/* 카드 더 보기 버튼 */
-.loadMoreBtn {
-    display: block;
-    margin: 30px auto;
-    padding: 10px 30px;
-    background: #ffcb05;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* 대표 설정 버튼 스타일 */
-.rep-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    z-index: 5;
-}
-
-.rep-btn:hover {
-    background: #fff;
-    transform: scale(1.1);
-}
-
-.rep-btn.active {
-    background: #ffcb05; /* 포켓몬 노란색 */
-    color: #2a75bb;
-    border-color: #2a75bb;
-}
-
-/* 대표 카드로 선택된 카드의 테두리 강조 */
-.newDeck li.filled:has(.rep-btn.active) {
-    border: 3px solid #ffcb05;
-    box-shadow: 0 0 8px rgba(255, 203, 5, 0.6);
-}
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    backdrop-filter: blur(8px);
-}
-
-/* 모달 컨텐츠 창 */
-.modal-content {
-    background: #222;
+/* 필터 섹션 */
+.filter-section {
+    background: white;
     padding: 30px;
-    border-radius: 15px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin-bottom: 40px;
+}
+
+.search-input-wrap {
     position: relative;
-    max-width: 800px;
-    width: 90%;
-    color: white;
-    border: 1px solid #ffcb05; /* 포켓몬 노란색 포인트 */
+    margin-bottom: 25px;
 }
 
-/* 닫기 버튼 */
-.modal-close {
+.search-input-wrap input {
+    width: 100%;
+    padding: 15px 25px 15px 50px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    font-size: 1rem;
+    background: #f8f9fa;
+    transition: all 0.3s;
+}
+
+.search-input-wrap input:focus {
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(9, 132, 227, 0.1);
+}
+
+.search-icon {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.filter-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.select-box label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-sub);
+    margin-bottom: 8px;
+}
+
+.select-box select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    background: white;
+    font-weight: 600;
+}
+
+/* 결과 카드 그리드 */
+.results-info {
+    margin-bottom: 20px;
+    color: var(--text-sub);
+    font-size: 0.95rem;
+}
+.results-info span {
+    color: #3d7dca;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.results-info span::after {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border: 2px solid #3d7dca;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+}
+
+.search-card-item {
+    background: white;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     cursor: pointer;
+    transition: all 0.3s;
 }
 
-/* 모달 내부 레이아웃 */
-.modal-body {
-    display: flex;
-    gap: 30px;
+.search-card-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
 }
 
-.modal-img img {
-    max-width: 300px;
+.img-wrap {
     border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
 }
 
-.modal-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.img-wrap img {
+    width: 100%;
+    display: block;
 }
 
-.modal-actions button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: #ffcb05;
+.info-wrap {
+    padding: 5px;
+}
+
+.card-id {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.card-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 더 보기 버튼 */
+.load-more-btn {
+    display: block;
+    margin: 50px auto;
+    padding: 12px 40px;
+    background: var(--accent);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
     border: none;
-    border-radius: 5px;
-    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+/* 모달 디자인 */
+.search-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000;
+}
+
+.modal-container {
+    background: white;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 25px;
+    padding: 40px;
+    position: relative;
+}
+
+.modal-content {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.modal-left img {
+    max-width: 300px;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.modal-right {
+    flex: 1;
+}
+
+.modal-rarity {
+    background: #f1f2f6;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.modal-right h2 {
+    font-size: 2.2rem;
+    margin: 15px 0;
+    color: var(--text-main);
+}
+
+.go-detail-btn {
+    margin-top: 30px;
+    width: 100%;
+    padding: 15px;
+    background: var(--accent);
+    color: white;
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
     cursor: pointer;
 }
