@@ -1,8 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../css/Header.css'
 import { useState } from 'react';
 
 const Header = () => {
+
+    const navigate = useNavigate();
+
     const userName = localStorage.getItem("userName");
     const [isDeckHovered, setIsDeckHovered] = useState(false);
     const [isUserHovered, setIsUserHovered] = useState(false);
@@ -58,7 +61,7 @@ const Header = () => {
                                     <ul className="dropdown-menu">
                                         <li><Link to='/mypage/my-decks'>내가 만든 덱</Link></li>
                                         <li><Link to='/mypage/scrapped-decks'>스크랩한 덱</Link></li>
-                                        <li><Link to='/mypage/liked-cards'>좋아요한 카드</Link></li>
+                                        <li><Link to='/my-collection'>좋아요한 카드</Link></li>
                                         <li className="divider"></li>
                                         <li><button onClick={handleLogout} className="logout-btn">로그아웃</button></li>
                                     </ul>

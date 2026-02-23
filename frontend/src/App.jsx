@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import TCGdex from "@tcgdex/sdk";
 import { Header, Footer } from './components';
-import { CardDetail, Login, Join, MainPage, SearchPage, DeckMaker, DeckDetail, DeckEdit, DeckRecipeBoard, Search, CardSimulator, ScrapList, MyDeckList } from './pages';
+import { CardDetail, Login, Join, MainPage, SearchPage, DeckMaker, DeckDetail, DeckEdit, DeckRecipeBoard, Search, CardSimulator, ScrapList, MyCollection, MyDeckList } from './pages';
 import { SeriesRoutes } from './routes';
 import './App.css'
 import axios from 'axios';
@@ -69,6 +69,7 @@ const App = () => {
             <Route element={<Search cardSeries={cardSeries} />} path='/search' />
             <Route element={<ScrapList />} path="/mypage/scrapped-decks" />
             <Route element={<MyDeckList />} path="/mypage/my-decks" />
+            <Route element={<MyCollection />} path="/my-collection" />
             <Route element={<CardDetail /> } path='card/:id' />
           </Route>
         </Routes>

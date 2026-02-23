@@ -22,7 +22,7 @@ const SeriesList = ({seriesData, cardSeries}) => {
         <div id="SeriesList">
             <header className="series-header">
                 <h1 className="title">확장팩 목록</h1>
-                <p className="subtitle">포켓몬 카드 게임 데이터 포켓의 다양한 시리즈를 탐색해보세요.</p>
+                <p className="subtitle">포켓몬 카드 게임 포켓의 다양한 시리즈를 탐색해보세요.</p>
             </header>
             <div className="series-grid">
                 {cardSeries.map((set, index) => (
@@ -34,7 +34,7 @@ const SeriesList = ({seriesData, cardSeries}) => {
                             <div className="info-wrapper">
                                 <span className="series-id">{set.id.toUpperCase()}</span>
                                 <h3 className="series-name">{set.name}</h3>
-                                <div className="view-more">카드 보기 →</div>
+                                <div className="view-more">카드 보기</div>
                             </div>
                         </div>
                     </Link>

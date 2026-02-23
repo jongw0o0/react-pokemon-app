@@ -9,7 +9,6 @@ const MyDeckList = () => {
     useEffect(() => {
         const fetchMyDecks = async () => {
             try {
-                // ⭐ 종우님이 이미 만들어두신 내 덱 조회 API 호출
                 const response = await axios.get("http://localhost:8000/api/decks/me", { withCredentials: true });
                 setMyDecks(response.data);
             } catch (error) {
@@ -60,7 +59,7 @@ const MyDeckList = () => {
                 ) : (
                     <div className="empty-message">
                         <p>아직 만든 덱이 없네요. 😅</p>
-                        <Link to="/saveDeck" className="go-recipes-btn">첫 번째 덱 만들러 가기</Link>
+                        <Link to="/deckMaker" className="go-recipes-btn">첫 번째 덱 만들러 가기</Link>
                     </div>
                 )}
             </div>

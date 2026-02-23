@@ -13,6 +13,25 @@ import Search from "./Search";
 import CardSimulator from "./CardSimulator";
 import ScrapList from "./ScrapList";
 import MyPage from "./MyPage";
+import MyCollection from "./MyCollection";
 import MyDeckList from "./MyDeckList";
 
-export {MainPage, Login, Join, SeriesList, SeriesDetail, CardDetail, SearchPage, DeckMaker, DeckRecipeBoard, DeckDetail, DeckEdit, Search, CardSimulator, ScrapList, MyDeckList, MyPage};
+export {
+    MainPage, 
+    Login, 
+    Join, 
+    SeriesList, 
+    SeriesDetail, 
+    CardDetail, 
+    SearchPage, 
+    DeckMaker, 
+    DeckRecipeBoard, 
+    DeckDetail, 
+    DeckEdit, 
+    Search, 
+    CardSimulator, 
+    ScrapList, 
+    MyDeckList,
+    MyCollection,
+    MyPage
+};
