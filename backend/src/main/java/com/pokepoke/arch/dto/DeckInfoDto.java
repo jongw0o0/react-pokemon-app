@@ -1,5 +1,7 @@
 package com.pokepoke.arch.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +19,8 @@ public class DeckInfoDto {
     private String representativeImageUrl;
 
     private String representativeCardId;
+
+    private LocalDateTime createdAt;
+    private Long views;
+    private Long scrapCount;
 }

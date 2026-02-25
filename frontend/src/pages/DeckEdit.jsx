@@ -59,6 +59,8 @@ const DeckEdit = ({seriesData, cardSeries}) => {
     const [representativeCardId, setRepresentativeCardId] = useState(null);
     const [representativeImgUrl, setRepresentativeImgUrl] = useState(null);
 
+    const [isPublic, setIsPublic] = useState(true);
+
     // 검색 조건들(필터)
     const [searchCard, setSearchCard] = useState("");                   // 이름
     const [selectedSet, setSelectedSet] = useState("all");              // 확장팩
@@ -91,8 +93,9 @@ const DeckEdit = ({seriesData, cardSeries}) => {
 
                 setDeckName(data.deckName);
                 setDeckComment(data.deckComment);
-                
-                // ⭐ 중요: ID 리스트를 실제 카드 객체 리스트로 변환
+                setIsPublic(data.isPublic === "Y");
+
+                // ID 리스트를 실제 카드 객체 리스트로 변환
                 const originalCards = data.apiCardIds.map(id => 
                     detailedCards.find(card => card.id === id)
                 ).filter(Boolean); // 혹시 모를 null 방지
@@ -301,11 +304,12 @@ const DeckEdit = ({seriesData, cardSeries}) => {
             deckComment: deckComment,
             apiCardIds: selectedCards.map(card => card.id),
             representativeCardId: representativeCardId,
-            representativeImageUrl: representativeImgUrl
+            representativeImageUrl: representativeImgUrl,
+            isPublic: isPublic ? "Y" : "N"
         };
 
         try {
-            // ⭐ POST 대신 PUT을 사용하고 URL에 deckId를 포함합니다.
+            // POST 대신 PUT을 사용하고 URL에 deckId를 포함
             await axios.put(`http://localhost:8000/api/decks/${deckId}`, deckData, { withCredentials: true });
             alert("성공적으로 수정되었습니다!");
             navigate(`/deck/${deckId}`); // 수정 완료 후 다시 상세 페이지로 이동
@@ -342,6 +346,21 @@ const DeckEdit = ({seriesData, cardSeries}) => {
                         선택된 카드: <strong>{selectedCards.length}</strong> / 20
                     </div>
 
+                    <label>공개 설정</label>
+                    <div className="switch-container">
+                        <span className={`status-text ${isPublic ? 'public' : 'private'}`}>
+                            {isPublic ? "전체 공개" : "나만 보기"}
+                        </span>
+                        <label className="toggle-switch">
+                            <input 
+                                type="checkbox" 
+                                checked={isPublic} 
+                                onChange={() => setIsPublic(!isPublic)} 
+                            />
+                            <span className="slider"></span>
+                        </label>
+                    </div>
+
                     <button 
                         className="save-btn"
                         onClick={handleUpdate}
@@ -367,9 +386,8 @@ const DeckEdit = ({seriesData, cardSeries}) => {
                                 <button 
                                     className={`rep-btn ${representativeCardId === card.id ? 'active' : ''}`}
                                     onClick={(e) => {
-                                        e.stopPropagation(); // 클릭 시 삭제 이벤트가 발생하는 것을 방지
+                                        e.stopPropagation();
                                         
-                                        // 이미지 주소 조립
                                         const cardId = card.id;
                                         const lastIndex = cardId.lastIndexOf("-");
                                         const formattedPath = (lastIndex !== -1) 
@@ -377,8 +395,8 @@ const DeckEdit = ({seriesData, cardSeries}) => {
                                             : cardId;
                                         const finalUrl = `https://assets.tcgdex.net/en/tcgp/${formattedPath}/low.png`;
 
-                                        setRepresentativeCardId(card.id); // 아이디 저장 (UI 표시용)
-                                        setRepresentativeImgUrl(finalUrl);  // 실제 저장용 URL 저장
+                                        setRepresentativeCardId(card.id);
+                                        setRepresentativeImgUrl(finalUrl);
                                     }}
                                 >
                                     {representativeCardId === card.id ? '★' : '☆'}

@@ -31,6 +31,7 @@ const CardDetail = () => {
                 const sdk = new TCGdex('en');
                 const res = await sdk.fetch('cards', id);
                 setCard(res);
+                console.log(res);
 
                 if (memberId) {
                     const likeRes = await fetch(`http://localhost:8000/api/cards/like/status?memberId=${memberId}&cardId=${id}`);

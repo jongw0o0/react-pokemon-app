@@ -59,6 +59,8 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     const [representativeCardId, setRepresentativeCardId] = useState(null);
     const [representativeImgUrl, setRepresentativeImgUrl] = useState(null);
 
+    const [isPublic, setIsPublic] = useState(true);
+
     // 검색 조건들(필터)
     const [searchCard, setSearchCard] = useState("");                   // 이름
     const [selectedSet, setSelectedSet] = useState("all");              // 확장팩
@@ -280,7 +282,8 @@ const DeckMaker = ({seriesData, cardSeries}) => {
             deckComment: deckComment,
             apiCardIds: selectedCards.map(card => card.id),
             representativeCardId: representativeCardId,
-            representativeImageUrl: representativeImgUrl
+            representativeImageUrl: representativeImgUrl,
+            isPublic: isPublic ? "Y" : "N"
         };
 
         try {
@@ -321,6 +324,21 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                     
                     <div className="count-display">
                         선택된 카드: <strong>{selectedCards.length}</strong> / 20
+                    </div>
+
+                    <label>공개 설정</label>
+                    <div className="switch-container">
+                        <span className={`status-text ${isPublic ? 'public' : 'private'}`}>
+                            {isPublic ? "전체 공개" : "나만 보기"}
+                        </span>
+                        <label className="toggle-switch">
+                            <input 
+                                type="checkbox" 
+                                checked={isPublic} 
+                                onChange={() => setIsPublic(!isPublic)} 
+                            />
+                            <span className="slider"></span>
+                        </label>
                     </div>
 
                     <button 

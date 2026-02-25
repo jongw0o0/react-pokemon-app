@@ -17,11 +17,14 @@ public interface DeckInfoMapper {
     @Mapping(source = "member.name", target = "userName")
     @Mapping(source = "representativeImageUrl", target = "representativeImageUrl")
     @Mapping(source = "representativeCardId", target = "representativeCardId")
+    @Mapping(source = "regTime", target = "createdAt")
+    @Mapping(source = "views", target = "views")
     DeckInfoDto entityToDto(Deck deck);
 
     // 상세 조회용 매핑 추가
     @Mapping(source = "deck.member.name", target = "userName")
     @Mapping(source = "deck.member.id", target = "memberId")
     @Mapping(source = "apiCardIds", target = "apiCardIds")
+    @Mapping(source = "deck.isPublic", target = "isPublic")
     DeckDetailDto entityToDetailDto(Deck deck, List<String> apiCardIds);
 }

@@ -15,5 +15,6 @@ public class DeckDetailDto {
     private List<String> apiCardIds; 
     private String representativeCardId;
     private String representativeImageUrl;
+    private String isPublic;
     private boolean isScrapped;
 }

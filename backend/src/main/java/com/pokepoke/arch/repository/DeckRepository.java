@@ -14,6 +14,9 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     @Query("select d from Deck d join fetch d.member")  
     List<Deck> findAllWithMember();
 
+    @Query("SELECT d FROM Deck d WHERE d.isPublic = 'Y' AND d.isDeleted = 'N'")
+    List<Deck> findAllPublicDecks();
+
     @Query("select d from Deck d join fetch d.member where d.member.id = :memberId")
     List<Deck> findByMemberIdWithMember(@Param("memberId") Long memberId);
 

@@ -20,4 +20,11 @@ public abstract class BaseEntity extends BaseTimeEntity{
     
     @LastModifiedBy
     private String modifiedBy;
+
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private Integer views = 0;
+
+    public void addViews() {
+        this.views++;
+    }
 }

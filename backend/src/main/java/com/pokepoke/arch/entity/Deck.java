@@ -55,26 +55,30 @@ public class Deck extends BaseEntity {
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DeckCard> deckCards = new ArrayList<>();
 
+    private String isPublic = "Y";
+
     @Column(name = "is_deleted", nullable = false)
     private String isDeleted = "N";
 
     public static Deck createDeck(String deckName, String deckComment, String representativeCardId,
-                                String representativeImageUrl, Member member) {
+                                String representativeImageUrl, String isPublic, Member member) {
         Deck deck = new Deck();
         deck.deckName = deckName;
         deck.deckComment = deckComment;
         deck.representativeCardId = representativeCardId;
         deck.representativeImageUrl = representativeImageUrl;
         deck.member = member;
+        deck.isPublic = isPublic;
         return deck;
     }
 
-    public void updateDeck(String deckName, String deckComment,
-                                  String representativeCardId, String representativeImageUrl) {
+    public void updateDeck(String deckName, String deckComment, String representativeCardId,
+                        String representativeImageUrl, String isPublic) {
         this.deckName = deckName;
         this.deckComment = deckComment;
         this.representativeCardId = representativeCardId;
         this.representativeImageUrl = representativeImageUrl;
+        this.isPublic = isPublic;
     }
 
     public void clearCards() {

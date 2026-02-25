@@ -8,6 +8,7 @@ const DeckRecipeBoard = () => {
 
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [sortType, setSortType] = useState("latest");
 
     useEffect(() => {
         const fetchRecipes = async () => {
@@ -24,6 +25,17 @@ const DeckRecipeBoard = () => {
         fetchRecipes();
     }, []);
 
+    const sortedRecipes = [...recipes].sort((a, b) => {
+        if (sortType === "latest") {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        } else if (sortType === "views") {
+            return (b.views || 0) - (a.views || 0);
+        } else if (sortType === "scraps") {
+            return (b.scrapCount || 0) - (a.scrapCount || 0);
+        }
+        return 0;
+    });
+
     if (loading) return <div className="loading-screen">포켓몬 도감을 동기화 중...</div>;
 
     return (
@@ -34,23 +46,25 @@ const DeckRecipeBoard = () => {
                     <div className="board-stats">
                         현재 등록된 덱: <strong>{recipes.length}</strong>개
                     </div>
+                    <div className="filter-group">
+                        <button className={sortType === "latest" ? "active" : ""} onClick={() => setSortType("latest")}>최신순</button>
+                        <button className={sortType === "views" ? "active" : ""} onClick={() => setSortType("views")}>조회수순</button>
+                        <button className={sortType === "scraps" ? "active" : ""} onClick={() => setSortType("scraps")}>스크랩순</button>
+                    </div>
                 </header>
 
                 <div className="recipe-grid">
-                    {recipes.map((recipe) => (
+                    {sortedRecipes.map((recipe) => (
                         <div key={recipe.deckId} className="recipe-card">
                             <div className="card-image-container">
-                                {/* ImageUrl이 비어있지 않은지 확인 */}
                                 {recipe.representativeImageUrl ? ( 
                                     <img 
                                         src={recipe.representativeImageUrl} 
                                         alt="대표 카드" 
                                         className="deck-thumb"
                                         onError={(e) => {
-                                            // 이미 한 번 에러가 났던 주소면 더 이상 시도하지 않도록 flag 설정
                                             if (!e.target.dataset.error) {
                                                 e.target.dataset.error = "true";
-                                                // 확실히 존재하는 이미지 주소(구글 로고나 빈 이미지 등)로 대체
                                                 e.target.src = "https://assets.tcgdex.net/en/tcgp/B1/1/low"; 
                                             }
                                         }}

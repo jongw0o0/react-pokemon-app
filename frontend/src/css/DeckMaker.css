@@ -77,6 +77,67 @@
     font-size: 1.2rem;
 }
 
+.switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+}
+
+.status-text {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.status-text.public { color: #0984e3; }
+.status-text.private { color: #636e72; }
+
+/* 토글 스위치 본체 */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #0984e3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
 .save-btn {
     width: 100%;
     padding: 15px;

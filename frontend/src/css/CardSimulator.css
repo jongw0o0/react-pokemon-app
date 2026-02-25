@@ -50,18 +50,63 @@
 .sim-card-item {
     position: relative;
     opacity: 0;
-    animation: cardAppear 0.5s ease-out forwards;
+    animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transition: transform 0.3s ease;
 }
 
 @keyframes cardAppear {
     from {
         opacity: 0;
-        transform: translateY(30px) scale(0.9);
+        transform: translateY(40px) scale(0.8);
     }
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+.grade-1성 {
+    filter: drop-shadow(0 0 8px rgba(123, 237, 159, 0.6));
+}
+
+.grade-2성 {
+    filter: drop-shadow(0 0 15px rgba(162, 155, 254, 0.8));
+    animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+               aura-pulse 2s infinite alternate 0.6s; 
+}
+
+.grade-이머시브 {
+    filter: drop-shadow(0 0 25px rgba(129, 236, 236, 0.9));
+    animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+               aura-pulse-intense 1.5s infinite alternate 0.6s;
+}
+
+.grade-크라운 {
+    filter: drop-shadow(0 0 35px rgba(255, 234, 167, 1)) brightness(1.1);
+    animation: cardAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+               aura-crown 1s infinite alternate 0.6s;
+}
+
+/* 애니메이션 정의 */
+@keyframes aura-pulse {
+    from { filter: drop-shadow(0 0 10px rgba(162, 155, 254, 0.6)); }
+    to { filter: drop-shadow(0 0 20px rgba(162, 155, 254, 1)); }
+}
+
+@keyframes aura-pulse-intense {
+    from { filter: drop-shadow(0 0 15px rgba(129, 236, 236, 0.7)); transform: scale(1); }
+    to { filter: drop-shadow(0 0 35px rgba(129, 236, 236, 1)); transform: scale(1.02); }
+}
+
+@keyframes aura-crown {
+    0% { filter: drop-shadow(0 0 20px #fdcb6e); }
+    50% { filter: drop-shadow(0 0 50px #ffeaa7); }
+    100% { filter: drop-shadow(0 0 20px #fdcb6e); }
+}
+
+@keyframes shine-sweep {
+    0% { background-position: -200% -200%; }
+    100% { background-position: 200% 200%; }
 }
 
 .sim-card-item:hover .sim-card-img {
@@ -79,3 +124,50 @@
     margin-top: 100px;
     opacity: 0.6;
 }
+
+.prob-section {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.prob-toggle-btn {
+    background: #f1f2f6;
+    border: 1px solid #dfe6e9;
+    padding: 10px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #636e72;
+    transition: 0.3s;
+}
+
+.prob-content {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    text-align: left;
+}
+
+.prob-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.prob-table th, .prob-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.prob-table th { background: #3d7dca; color: white; }
+
+/* .rare-info {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+    border: 1px solid #ffeaa7;
+    padding: 20px;
+    border-radius: 15px;
+} */

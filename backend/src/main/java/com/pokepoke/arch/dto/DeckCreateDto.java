@@ -23,4 +23,6 @@ public class DeckCreateDto {
     private String representativeCardId;
     
     private String representativeImageUrl;
+
+    private String isPublic;
 }

@@ -22,7 +22,7 @@ import com.pokepoke.arch.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = true) 
 @RequiredArgsConstructor
 public class DeckService {
 
@@ -47,6 +47,7 @@ public class DeckService {
                 dto.getDeckComment(),
                 dto.getRepresentativeCardId(),
                 dto.getRepresentativeImageUrl(),
+                dto.getIsPublic(),
                 member);
 
         // 카드 ID 리스트를 순회하며 DeckCard 엔티티 생성 및 저장
@@ -78,7 +79,8 @@ public class DeckService {
             dto.getDeckName(), 
             dto.getDeckComment(), 
             dto.getRepresentativeCardId(), 
-            dto.getRepresentativeImageUrl()
+            dto.getRepresentativeImageUrl(),
+            dto.getIsPublic()
         );
     
         deck.getDeckCards().clear();
@@ -101,11 +103,13 @@ public class DeckService {
 
     // 모든 공개 덱 조회
     public List<DeckInfoDto> getAllPublicDecks() {
-        List<Deck> decks = deckRepository.findAll();
+        List<Deck> decks = deckRepository.findAllPublicDecks();
 
-        return decks.stream()
-                .map(deckInfoMapper::entityToDto)
-                .collect(Collectors.toList());
+        return decks.stream().map(deck -> {
+            DeckInfoDto dto = deckInfoMapper.entityToDto(deck);
+            dto.setScrapCount(scrapRepository.countByDeck(deck)); 
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     // 특정 회원의 덱 조회
@@ -131,9 +135,12 @@ public class DeckService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public DeckDetailDto getDeckDetail(Long deckId, Long currentMemberId) {
         Deck deck = deckRepository.findById(deckId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 덱입니다."));
+
+        deck.addViews();
 
         List<DeckCard> deckCards = deckCardRepository.findByDeckId(deckId);
         List<String> apiCardIds = deckCards.stream()
