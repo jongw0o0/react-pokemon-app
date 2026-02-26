@@ -1,30 +1,41 @@
 package com.pokepoke.arch.mapper;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.pokepoke.arch.dto.DeckDetailDto;
 import com.pokepoke.arch.dto.DeckInfoDto;
 import com.pokepoke.arch.entity.Deck;
+import org.springframework.stereotype.Component;
+import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface DeckInfoMapper {
+@Component
+public class DeckInfoMapper {
 
-    // Deck 엔티티의 member 필드 안에 있는 name을 DeckInfoDto의 userName 필드로 매핑
-    @Mapping(source = "id", target = "deckId")    
-    @Mapping(source = "member.name", target = "userName")
-    @Mapping(source = "representativeImageUrl", target = "representativeImageUrl")
-    @Mapping(source = "representativeCardId", target = "representativeCardId")
-    @Mapping(source = "regTime", target = "createdAt")
-    @Mapping(source = "views", target = "views")
-    DeckInfoDto entityToDto(Deck deck);
+    // 엔티티를 리스트 노출용 DTO로 변환
+    public DeckInfoDto entityToDto(Deck deck) {
+        DeckInfoDto dto = new DeckInfoDto();
+        dto.setDeckId(deck.getId());
+        dto.setDeckName(deck.getDeckName());
+        dto.setEnergies(deck.getEnergies());
+        dto.setDeckComment(deck.getDeckComment());
+        dto.setUserName(deck.getMember().getName());
+        dto.setRepresentativeCardId(deck.getRepresentativeCardId());
+        dto.setRepresentativeImageUrl(deck.getRepresentativeImageUrl());
+        // dto.setCreatedAt(deck.getCreatedAt());
+        // dto.setViews(deck.getViews());
+        return dto;
+    }
 
-    // 상세 조회용 매핑 추가
-    @Mapping(source = "deck.member.name", target = "userName")
-    @Mapping(source = "deck.member.id", target = "memberId")
-    @Mapping(source = "apiCardIds", target = "apiCardIds")
-    @Mapping(source = "deck.isPublic", target = "isPublic")
-    DeckDetailDto entityToDetailDto(Deck deck, List<String> apiCardIds);
+    // 엔티티를 상세 보기용 DTO로 변환
+    public DeckDetailDto entityToDetailDto(Deck deck, List<String> apiCardIds) {
+        DeckDetailDto dto = new DeckDetailDto();
+        dto.setMemberId(deck.getMember().getId());
+        dto.setUserName(deck.getMember().getName());
+        dto.setDeckName(deck.getDeckName());
+        dto.setEnergies(deck.getEnergies());
+        dto.setDeckComment(deck.getDeckComment());
+        dto.setApiCardIds(apiCardIds);
+        dto.setIsPublic(deck.getIsPublic());
+        dto.setRepresentativeCardId(deck.getRepresentativeCardId());
+        dto.setRepresentativeImageUrl(deck.getRepresentativeImageUrl());
+        return dto;
+    }
 }

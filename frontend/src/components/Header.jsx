@@ -22,7 +22,6 @@ const Header = () => {
             <div className="header-inner">
                 <div className='left'>
                     <Link to='/' className="logo">
-                        {/* 로고 자리 */}
                         <span className="logo-text">PokeArch</span>
                     </Link>
                 </div>

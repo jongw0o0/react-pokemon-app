@@ -5,7 +5,7 @@ import '../css/DeckMaker.css'
 import { useState } from "react";
 import { useMemo } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; 
 
 const RARITIES = [
@@ -53,8 +53,16 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     // 선택된 카드 목록
     const [selectedCards, setSelectedCards] = useState([]); 
 
+    const usedTypes = useMemo(() => {
+        const types = selectedCards
+            .filter(card => card.types && card.types.length > 0)
+            .flatMap(card => card.types);
+        return [...new Set(types)];
+    }, [selectedCards]);
+
     // 덱 이름과 덱 설명, 대표 이미지 URL
     const [deckName, setDeckName] = useState("");
+    const [energies, setEnergies] = useState([]);
     const [deckComment, setDeckComment] = useState("");
     const [representativeCardId, setRepresentativeCardId] = useState(null);
     const [representativeImgUrl, setRepresentativeImgUrl] = useState(null);
@@ -80,6 +88,8 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     // const [allowedRetreatIds, setAllowedRetreatIds] = useState(null);
     const [displayCount, setDisplayCount] = useState(40);
     const [allowedSubtypeIds, setAllowedSubtypeIds] = useState(null);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // 전체 카드 목록 로드 (UI 렌더링용 최소 데이터)
     useEffect(() => {
@@ -241,7 +251,7 @@ const DeckMaker = ({seriesData, cardSeries}) => {
     }, [selectedCategory]);
 
     // 카드 선택
-    const handleCardClick = (card) => {
+    const handleCardClick = async (card) => {
         
         if (selectedCards.length >= 20) {
             alert("덱은 최대 20장까지 구성할 수 있습니다.");
@@ -254,9 +264,38 @@ const DeckMaker = ({seriesData, cardSeries}) => {
             alert("같은 이름의 카드는 2장까지만 넣을 수 있습니다.");
             return;
         }
-        console.log("클릭한 카드의 진짜 속성들:", card);
-        setSelectedCards([...selectedCards, card]);
+
+        try {
+            // 상세 데이터가 이미 있는지 확인하고 없으면 fetch
+            let detailedData = card;
+            if (!card.types || !card.rarity) {
+                const response = await fetch(`https://api.tcgdex.net/v2/en/cards/${card.id}`);
+                detailedData = await response.json();
+            }
+            if (detailedData.types) {
+                setEnergies(prev => {
+                    const currentDeckTypes = new Set(selectedCards.flatMap(c => c.types || []));
+                    const newTypes = detailedData.types.filter(t => !currentDeckTypes.has(t) && !prev.includes(t));
+                    return [...prev, ...newTypes];
+                });
+            }
+
+            console.log("상세 데이터 확인(types 포함):", detailedData.types);
+            setSelectedCards([...selectedCards, detailedData]);
+        } catch (error) {
+            console.error("카드 상세 정보 로드 실패:", error);
+            setSelectedCards([...selectedCards, card]);
+        }
     }
+
+    // 에너지 관리
+    const toggleEnergy = (type) => {
+        setEnergies(prev => 
+            prev.includes(type) 
+                ? prev.filter(t => t !== type)
+                : [...prev, type]
+        );
+    };
 
     // 선택된 카드를 다시 클릭해서 취소
     const handleRemoveCard = (index) => {
@@ -279,6 +318,7 @@ const DeckMaker = ({seriesData, cardSeries}) => {
         // 백엔드의 DectCreateDto 참고
         const deckData = {
             deckName: deckName,
+            energies: energies,
             deckComment: deckComment,
             apiCardIds: selectedCards.map(card => card.id),
             representativeCardId: representativeCardId,
@@ -313,23 +353,53 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                             onChange={(e) => setDeckName(e.target.value)}
                         />
                     </div>
+
+                    <div className="input-group">
+                        <label>사용 에너지</label>
+                        <div className="used-types-display interactive">
+                            {usedTypes.length > 0 ? (
+                                usedTypes.map(type => {
+                                    const isActive = energies.includes(type);
+                                    return (
+                                        <button 
+                                            key={type} 
+                                            type="button"
+                                            className={`type-btn ${isActive ? 'active' : ''}`}
+                                            onClick={() => toggleEnergy(type)}
+                                            title={isActive ? `${type} 사용 중` : `${type} 비활성화됨`}
+                                        >
+                                            {/* <img src={`/assets/icons/types/${type.toLowerCase()}.png`} alt={type} /> */}
+                                            <span>{type}</span>
+                                        </button>
+                                    );
+                                })
+                            ) : (
+                                <span className="no-types"></span>
+                            )}
+                        </div>
+                    </div>
+
                     <div className="input-group">
                         <label>덱 설명</label>
                         <textarea 
-                            placeholder="덱 컨셉을 설명해주세요" 
+                            placeholder="덱에 대한 설명을 작성해주세요" 
                             value={deckComment}
                             onChange={(e) => setDeckComment(e.target.value)}
                         />
                     </div>
-                    
+                    <button 
+                        className="open-modal-btn" 
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        카드 검색 및 추가
+                    </button>
                     <div className="count-display">
                         선택된 카드: <strong>{selectedCards.length}</strong> / 20
                     </div>
 
-                    <label>공개 설정</label>
                     <div className="switch-container">
                         <span className={`status-text ${isPublic ? 'public' : 'private'}`}>
-                            {isPublic ? "전체 공개" : "나만 보기"}
+                            {isPublic ? "전체 공개" : "전체 공개"}
                         </span>
                         <label className="toggle-switch">
                             <input 
@@ -353,7 +423,7 @@ const DeckMaker = ({seriesData, cardSeries}) => {
 
             <div className="deck-builder-main">
                 <div className='newDeck'>
-                    <h2>{deckName ? deckName : "새로운 덱 구성"}</h2>
+                    <h2>{deckName ? deckName : "새로운 덱"}</h2>
                     <ul>
                         {selectedCards.map((card, idx) => (
                             <li key={`selected-${idx}`} className="filled">
@@ -384,67 +454,90 @@ const DeckMaker = ({seriesData, cardSeries}) => {
                             </li>
                         ))}
                         {Array.from({ length: 20 - selectedCards.length }).map((_, idx) => (
-                            <li key={`empty-${idx}`} className="empty"></li>
-                        ))}
-                    </ul>
-                </div>
-                <div className='searchCard'>
-                    <div className="searchBar">
-                        <input 
-                            type='text'
-                            placeholder='카드 이름 검색'
-                            value={searchCard}
-                            onChange={(e) => setSearchCard(e.target.value)}
-                        />
-                    </div>
-                    <div className="selectOpts">
-                        <select value={selectedSet} onChange={(e) => setSelectedSet(e.target.value)}>
-                            <option value="all">모든 확장팩</option>
-                            {cardSeries?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                        </select>
-                        <select value={selectedRarity} onChange={(e) => setSelectedRarity(e.target.value)}>
-                            <option value="all">모든 레어도</option>
-                            {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
-                        </select>
-                        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                            <option value="all">모든 카테고리</option>
-                            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                        </select>
-                        {selectedCategory === "Trainer" && (
-                            <select value={selectedSubtype} onChange={(e) => setSelectedSubtype(e.target.value)}>
-                                <option value="all">모든 트레이너스 종류</option>
-                                {TRAINER_SUBTYPES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-                            </select>
-                        )}
-                        {selectedCategory === "Pokemon" && (
-                            <>
-                                <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
-                                    <option value="all">모든 타입</option>
-                                    {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                </select>
-                                <select value={selectedStage} onChange={(e) => setSelectedStage(e.target.value)}>
-                                    <option value="all">모든 진화 단계</option>
-                                    {STAGES.map(s => <option key={s} value={s}>{s}</option>)}
-                                </select>
-                            </>
-                        )}
-                    </div>
-                </div>
-                <div className="cardLists">
-                    <ul>
-                        {visibleCards.map((card) => (
-                            <li key={card.id} onClick={() => handleCardClick(card)}>
-                                <img src={`${card.image}/low.webp`} alt={card.name} loading="lazy" />
-                                <p>{card.name}</p>
+                            <li 
+                                key={`empty-${idx}`} 
+                                className="empty" 
+                                onClick={() => setIsModalOpen(true)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <span className="plus-icon">+</span>
                             </li>
                         ))}
                     </ul>
-                    {filteredCards.length > displayCount && (
-                        <button onClick={() => setDisplayCount(prev => prev + 40)} className="loadMoreBtn">
-                            카드 더 보기 ({displayCount} / {filteredCards.length})
-                        </button>
-                    )}
                 </div>
+
+                {isModalOpen && (
+                    <div className="search-modal-overlay" onClick={() => setIsModalOpen(false)}>
+                        <div className="search-modal-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <h2>카드 검색</h2>
+                                <button className="close-btn" onClick={() => setIsModalOpen(false)}>&times;</button>
+                            </div>
+                            
+                            <div className='searchCard'>
+                                <div className="searchBar">
+                                    <input 
+                                        type='text'
+                                        placeholder='카드 이름 검색'
+                                        value={searchCard}
+                                        onChange={(e) => setSearchCard(e.target.value)}
+                                    />
+                                </div>
+                                <div className="selectOpts">
+                                    <select value={selectedSet} onChange={(e) => setSelectedSet(e.target.value)}>
+                                        <option value="all">모든 확장팩</option>
+                                        {cardSeries?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                                    </select>
+                                    <select value={selectedRarity} onChange={(e) => setSelectedRarity(e.target.value)}>
+                                        <option value="all">모든 레어도</option>
+                                        {RARITIES.map(r => <option key={r} value={r}>{r}</option>)}
+                                    </select>
+                                    <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                                        <option value="all">모든 카테고리</option>
+                                        {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                    {selectedCategory === "Trainer" && (
+                                        <select value={selectedSubtype} onChange={(e) => setSelectedSubtype(e.target.value)}>
+                                            <option value="all">모든 트레이너스 종류</option>
+                                            {TRAINER_SUBTYPES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                                        </select>
+                                    )}
+                                    {selectedCategory === "Pokemon" && (
+                                        <>
+                                            <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+                                                <option value="all">모든 타입</option>
+                                                {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                                            </select>
+                                            <select value={selectedStage} onChange={(e) => setSelectedStage(e.target.value)}>
+                                                <option value="all">모든 진화 단계</option>
+                                                {STAGES.map(s => <option key={s} value={s}>{s}</option>)}
+                                            </select>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="cardLists">
+                                <ul>
+                                    {visibleCards.map((card) => (
+                                        <li key={card.id} onClick={() => {
+                                            handleCardClick(card);
+                                            // setIsModalOpen(false);
+                                        }}>
+                                            <img src={`${card.image}/low.webp`} alt={card.name} loading="lazy" />
+                                            <p>{card.name}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                                {filteredCards.length > displayCount && (
+                                    <button onClick={() => setDisplayCount(prev => prev + 40)} className="loadMoreBtn">
+                                        카드 더 보기
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

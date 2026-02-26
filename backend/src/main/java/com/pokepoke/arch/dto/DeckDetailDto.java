@@ -11,6 +11,7 @@ public class DeckDetailDto {
     private Long memberId;
     private String userName;
     private String deckName;
+    private List<String> energies;
     private String deckComment;
     private List<String> apiCardIds; 
     private String representativeCardId;

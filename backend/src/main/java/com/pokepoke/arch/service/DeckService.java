@@ -44,6 +44,7 @@ public class DeckService {
         // 덱 엔티티 생성 및 저장
         Deck deck = Deck.createDeck(
                 dto.getDeckName(),
+                dto.getEnergies(),
                 dto.getDeckComment(),
                 dto.getRepresentativeCardId(),
                 dto.getRepresentativeImageUrl(),
@@ -76,7 +77,8 @@ public class DeckService {
         }
     
         deck.updateDeck(
-            dto.getDeckName(), 
+            dto.getDeckName(),
+            dto.getEnergies(), 
             dto.getDeckComment(), 
             dto.getRepresentativeCardId(), 
             dto.getRepresentativeImageUrl(),
@@ -91,6 +93,7 @@ public class DeckService {
         }
 
         deck.setFinalRepresentativeInfo();
+        System.out.println("넘어온 에너지 리스트: " + dto.getEnergies());
     }
 
     @Transactional

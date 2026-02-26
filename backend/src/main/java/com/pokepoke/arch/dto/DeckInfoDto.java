@@ -1,6 +1,7 @@
 package com.pokepoke.arch.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,8 @@ public class DeckInfoDto {
     private Long deckId;
 
     private String deckName;
+    
+    private List<String> energies;
 
     private String deckComment;
     

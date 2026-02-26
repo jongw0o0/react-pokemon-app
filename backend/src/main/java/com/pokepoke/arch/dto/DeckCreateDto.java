@@ -14,6 +14,8 @@ public class DeckCreateDto {
     @NotBlank(message = "덱 이름은 필수입니다.")
     private String deckName;
 
+    private List<String> energies;
+
     private String deckComment;
 
     // TCGDex API의 ID 리스트

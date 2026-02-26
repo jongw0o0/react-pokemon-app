@@ -2,14 +2,20 @@ package com.pokepoke.arch.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.pokepoke.arch.converter.EnergyListConverter;
+
 // import org.hibernate.annotations.DialectOverride.SQLDelete;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -41,6 +47,10 @@ public class Deck extends BaseEntity {
     @Column(nullable = false)
     private String deckName;
 
+    @Column(name = "energies", nullable = false)
+    @Convert(converter = EnergyListConverter.class)
+    private List<String> energies = new ArrayList<>();
+
     @Column(nullable = false)
     private String deckComment;
 
@@ -60,10 +70,13 @@ public class Deck extends BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private String isDeleted = "N";
 
-    public static Deck createDeck(String deckName, String deckComment, String representativeCardId,
+    public static Deck createDeck(String deckName, List<String> energies, String deckComment, String representativeCardId,
                                 String representativeImageUrl, String isPublic, Member member) {
         Deck deck = new Deck();
         deck.deckName = deckName;
+        if (energies != null) {
+            deck.energies.addAll(energies); 
+        }
         deck.deckComment = deckComment;
         deck.representativeCardId = representativeCardId;
         deck.representativeImageUrl = representativeImageUrl;
@@ -72,9 +85,16 @@ public class Deck extends BaseEntity {
         return deck;
     }
 
-    public void updateDeck(String deckName, String deckComment, String representativeCardId,
+    public void updateDeck(String deckName, List<String> energies, String deckComment, String representativeCardId,
                         String representativeImageUrl, String isPublic) {
         this.deckName = deckName;
+        this.energies.clear();
+        if (energies != null) {
+            List<String> uniqueEnergies = energies.stream()
+                                                .distinct() // 중복 제거!
+                                                .collect(Collectors.toList());
+            this.energies.addAll(uniqueEnergies);
+        }
         this.deckComment = deckComment;
         this.representativeCardId = representativeCardId;
         this.representativeImageUrl = representativeImageUrl;
