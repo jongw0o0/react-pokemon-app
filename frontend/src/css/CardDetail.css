@@ -49,6 +49,7 @@
 }
 .content-wrapper {
     display: flex;
+    margin-top: 20px;
     gap: 60px;
     align-items: flex-start;
 }

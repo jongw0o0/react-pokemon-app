@@ -18,4 +18,6 @@ public class DeckDetailDto {
     private String representativeImageUrl;
     private String isPublic;
     private boolean isScrapped;
+    private Long views;
+    private Long scrapCount;
 }

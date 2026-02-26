@@ -14,7 +14,7 @@ const Layout = () => {
       <main className="content-area">
         <Outlet />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
@@ -50,7 +50,16 @@ const App = () => {
     }
   };
 
-  if (loading) return <p>Loading Pocket cards...</p>;
+  if (loading) {
+    return (
+      <div id="AppLoading">
+        <div className="card-loading-wrapper">
+          <div className="loading-spinner" />
+          <p>Loading Pocket cards...</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <>

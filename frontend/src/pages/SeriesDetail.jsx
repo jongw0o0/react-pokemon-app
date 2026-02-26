@@ -2,6 +2,8 @@ import { useParams, Link } from "react-router-dom";
 import { TiltCard } from "../components";
 import '../css/SeriesDetail.css'
 
+import { handleImageError } from '../utils/imageHelper';
+
 const SeriesDetail = ({seriesData, cardSeries}) => {
     const {id} = useParams();
     const numId = Number(id)
@@ -50,7 +52,8 @@ const SeriesDetail = ({seriesData, cardSeries}) => {
                                 <div className="card-image-box">
                                     <img 
                                         src={card.image + '/low.png'} 
-                                        alt={card.name} 
+                                        alt={card.name}
+                                        onError={handleImageError}
                                         loading="lazy"
                                     />
                                     <div className="card-overlay">

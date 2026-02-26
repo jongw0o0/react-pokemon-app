@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";  
 import TCGdex from "@tcgdex/sdk";
 import '../css/CardDetail.css';
+import { handleImageError } from '../utils/imageHelper';
 
 const RARE_LIST = [
     {value : 'One Diamond', name : '♦︎'}, {value : 'Two Diamond', name : '♦︎♦︎'},
@@ -70,6 +71,17 @@ const CardDetail = () => {
         }
     };
 
+    const getFallbackImageUrl = (cardId) => {
+        if (!cardId) return null;
+        const lastIndex = cardId.lastIndexOf("-");
+        const formattedPath = (lastIndex !== -1) 
+            ? `${cardId.substring(0, lastIndex)}/${cardId.substring(lastIndex + 1)}` 
+            : cardId;
+        return `https://assets.tcgdex.net/en/tcgp/${formattedPath}/high.webp`;
+    };
+
+    
+
     // 마우스 위치에 따라 카드가 3D로 기울어지는 효과
     const handleMouseMove = (e) => {
         const el = e.currentTarget;
@@ -88,7 +100,9 @@ const CardDetail = () => {
     };
 
     const rarity = card ? (RARE_LIST.find(r => r.value === card.rarity)?.name || card.rarity) : "";
-    const imgUrl = card?.image ? `${card.image}/high.webp` : "";
+    const imgUrl = card?.image 
+    ? `${card.image}/high.webp` 
+    : getFallbackImageUrl(card?.id);
 
     return (
         <div id="CardDetail">
@@ -109,7 +123,22 @@ const CardDetail = () => {
                         <div className="content-wrapper">
                             <div className="left">
                                 <div className="card-visual-wrap" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-                                    <img src={imgUrl} alt={card.name} className="main-card-img" />
+                                    {/* 2. imgUrl이 존재할 때만 렌더링하여 빈 문자열 "" 전달 방지 */}
+                                    {imgUrl ? (
+                                        <img 
+                                            className="main-card-img" 
+                                            src={imgUrl} 
+                                            alt={card?.name} 
+                                            onError={handleImageError} 
+                                        />
+                                    ) : (
+                                        /* 3. URL이 아예 없을 때 보여줄 플레이스홀더 */
+                                        <img 
+                                            className="main-card-img" 
+                                            src="https://assets.tcgdex.net/en/tcgp/B1/1/low.png" 
+                                            alt="기본 이미지" 
+                                        />
+                                    )}
                                     <div className="shine-layer" />
                                 </div>
                             </div>

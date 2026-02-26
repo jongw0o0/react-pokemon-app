@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import '../css/DeckDetail.css'; 
+import { handleImageError } from '../utils/imageHelper';
 
 const DeckDetail = () => {
     // URL 파라미터에서 deckId 추출
@@ -12,6 +13,7 @@ const DeckDetail = () => {
     const [loading, setLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
     const [isScrapped, setIsScrapped] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);  // 추천
 
     // API ID를 이미지 URL로 변환 (A1-218 -> A1/218)
     const getImageUrl = (cardId) => {
@@ -32,6 +34,7 @@ const DeckDetail = () => {
                 const response = await axios.get(`http://localhost:8000/api/decks/${deckId}`, { withCredentials: true });
                 setDeck(response.data);
                 setIsScrapped(response.data.scrapped);
+                // setIsLiked(response.data.liked);
             } catch (error) {
                 console.error("덱 정보를 불러오는 데 실패했습니다.", error);
                 alert("존재하지 않는 덱이거나 불러오기에 실패했습니다.");
@@ -72,6 +75,25 @@ const DeckDetail = () => {
         }
     };
 
+    const handleLike = async () => {
+        const memberId = localStorage.getItem("memberId");
+        if (!memberId) {
+            alert("로그인 후 이용 가능합니다.");
+            return;
+        }
+        try {
+            await axios.post(`http://localhost:8000/api/decks/${deckId}/like`, {}, { withCredentials: true });
+            const newStatus = !isLiked;
+            setIsLiked(newStatus);
+            setDeck(prev => ({
+                ...prev,
+                likeCount: newStatus ? (prev.likeCount + 1) : (prev.likeCount - 1)
+            }));
+        } catch (error) {
+            console.error("추천 오류:", error);
+        }
+    };
+
     const handleScrap = async () => {
         const memberId = localStorage.getItem("memberId");
         if (!memberId) {
@@ -81,8 +103,17 @@ const DeckDetail = () => {
         // setIsScrapped(!isScrapped);
         try {
             await axios.post(`http://localhost:8000/api/decks/${deckId}/scrap`, {}, { withCredentials: true });
-            setIsScrapped(!isScrapped);
-            alert(isScrapped ? "스크랩이 취소되었습니다." : "덱을 스크랩했습니다!");
+            const newScrapStatus = !isScrapped;
+            setIsScrapped(newScrapStatus);
+                setDeck(prev => ({
+                ...prev,
+                // 스크랩 성공 시 +1, 취소 시 -1
+                scrapCount: newScrapStatus 
+                    ? (Number(prev.scrapCount) || 0) + 1 
+                    : Math.max(0, (Number(prev.scrapCount) || 0) - 1)
+            }));
+
+            // alert(newScrapStatus ? "덱을 스크랩했습니다!" : "스크랩이 취소되었습니다.");
         } catch (error) {
             console.error("스크랩 오류:", error);
         }
@@ -117,26 +148,57 @@ const DeckDetail = () => {
                 <div className="header-content">
                     <div className="title-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                         <h1>{deck.deckName}</h1>    
-                        <button 
-                            className={`scrap-btn ${isScrapped ? 'active' : ''}`} 
-                            onClick={handleScrap}
-                        >
-                            {isScrapped ? '❤️' : '🤍'}
-                        </button>
+                        <div className="action-buttons-group">
+                            <button 
+                                className={`like-btn ${isLiked ? 'active' : ''}`} 
+                                onClick={handleLike}
+                                title="이 덱 추천하기"
+                            >
+                                <span className="icon">👍</span>
+                                <span className="count">{deck.likeCount || 0}</span>
+                            </button>
+
+                            <button 
+                                className={`scrap-btn ${isScrapped ? 'active' : ''}`} 
+                                onClick={handleScrap}
+                                title={isScrapped ? "스크랩 취소" : "덱 스크랩"}
+                            >
+                                <span className="icon">🔖</span>
+                                <span className="count">{deck.scrapCount || 0}</span>
+                            </button>
+
+                            <div className="views-info">
+                                <span className="icon">👁️</span>
+                                <span className="count">{deck.views || 0}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="deck-meta">
-                        <span className="deck-author">작성자: {deck.userName}</span>
+                    {deck.energies && deck.energies.length > 0 && (
+                        <div className="deck-header-energies">
+                            {deck.energies.map((type) => (
+                                <div key={type} className={`energy-badge ${type.toLowerCase()}`}>
+                                    <span className="energy-text">{type}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    <div className="deck-meta-info">
+                        <span className="author">작성자: {deck.userName}</span>
+                        <p className="deck-comment">{deck.deckComment}</p>
                     </div>
-                    <p className="deck-desc">{deck.deckComment}</p>
                 </div>
             </header>
             <div className="deck-detail-content">
                 <div className="representative-section">
-                    <img 
-                        src={deck.representativeImageUrl} 
-                        alt="대표 카드" 
-                        className="rep-card-img" 
-                    />
+                    <Link to={getInternalCardPath(deck.representativeCardId)} className="rep-card-link">
+                        <img 
+                            src={deck.representativeImageUrl} 
+                            onError={handleImageError}
+                            alt="대표 카드" 
+                            className="rep-card-img" 
+                        />
+                    </Link>
                 </div>
                 <div className="card-grid-section">
                     <div className="deck-grid">
@@ -145,7 +207,8 @@ const DeckDetail = () => {
                                 <Link to={getInternalCardPath(id)} className="card-link">
                                     <img 
                                         src={getImageUrl(id)} 
-                                        alt="카드" 
+                                        alt="카드"
+                                        onError={handleImageError}
                                         loading="lazy"
                                         title={`클릭하여 카드 정보 상세보기`}
                                     />

@@ -35,7 +35,7 @@ const Header = () => {
                             onMouseEnter={() => setIsDeckHovered(true)} 
                             onMouseLeave={() => setIsDeckHovered(false)}
                         >
-                            <Link to='/deckmaker' className="nav-item">덱 레시피</Link>
+                            <Link to='/deckRecipes' className="nav-item">덱 레시피</Link>
                             {isDeckHovered && (
                                 <ul className="dropdown-menu">
                                     <li><Link to='/deckRecipes'>덱 목록</Link></li>

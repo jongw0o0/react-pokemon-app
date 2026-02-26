@@ -64,8 +64,8 @@ const CardSimulator = () => {
         setPack([]); 
         setIsDrawing(true);
         
-        // const isRarePack = Math.random() * 100 <= 0.05;
-        const isRarePack = 1;
+        const isRarePack = Math.random() * 100 <= 0.05;
+        // const isRarePack = 1;
         
         const newPack = isRarePack 
             ? Array(5).fill().map(() => drawOneCard("rare", true))
@@ -85,7 +85,7 @@ const CardSimulator = () => {
         <div className="card-sim-container">
             <div className="sim-header">
                 <h1 className="sim-title">카드 뽑기 시뮬레이터</h1>
-                <p className="sim-subtitle">text..</p>
+                <p className="sim-subtitle">당신의 운을 시험해 보세요..</p>
                 <button 
                     className="draw-btn" 
                     onClick={handleDrawPack}

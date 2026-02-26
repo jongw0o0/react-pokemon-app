@@ -19,8 +19,10 @@ public class DeckInfoMapper {
         dto.setUserName(deck.getMember().getName());
         dto.setRepresentativeCardId(deck.getRepresentativeCardId());
         dto.setRepresentativeImageUrl(deck.getRepresentativeImageUrl());
-        // dto.setCreatedAt(deck.getCreatedAt());
-        // dto.setViews(deck.getViews());
+        dto.setCreatedAt(deck.getRegTime());
+        dto.setScrapCount(deck.getScrapCount() != null ? deck.getScrapCount() : 0L);
+        dto.setViews(deck.getViews() != null ? deck.getViews().longValue() : 0L);
+        
         return dto;
     }
 
@@ -36,6 +38,8 @@ public class DeckInfoMapper {
         dto.setIsPublic(deck.getIsPublic());
         dto.setRepresentativeCardId(deck.getRepresentativeCardId());
         dto.setRepresentativeImageUrl(deck.getRepresentativeImageUrl());
+        dto.setScrapCount(deck.getScrapCount() != null ? deck.getScrapCount() : 0L);
+        dto.setViews(deck.getViews() != null ? deck.getViews().longValue() : 0L);
         return dto;
     }
 }

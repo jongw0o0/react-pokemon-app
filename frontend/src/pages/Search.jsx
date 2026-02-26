@@ -2,6 +2,7 @@ import TCGdex from "@tcgdex/sdk";
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
+import { handleImageError } from '../utils/imageHelper';
 
 import '../css/Search.css'
 
@@ -289,7 +290,8 @@ const Search = ({ cardSeries }) => {
                             {filteredCards.slice(0, displayCount).map((card) => (
                                 <div key={card.id} className="search-card-item" onClick={() => setSelectedCard(card)}>
                                     <div className="img-wrap">
-                                        <img src={`${card.image}/low.webp`} alt={card.name} loading="lazy" />
+                                        <img src={`${card.image}/low.webp`} alt={card.name} 
+                                        onError={handleImageError} loading="lazy" />
                                     </div>
                                     <div className="info-wrap">
                                         <p className="card-id">{card.id.split('-').pop()}</p>
@@ -313,7 +315,8 @@ const Search = ({ cardSeries }) => {
                         <button className="close-btn" onClick={() => setSelectedCard(null)}>×</button>
                         <div className="modal-content">
                             <div className="modal-left">
-                                <img src={`${selectedCard.image}/high.webp`} alt={selectedCard.name} />
+                                <img src={`${selectedCard.image}/high.webp`} alt={selectedCard.name} 
+                                        onError={handleImageError} />
                             </div>
                             <div className="modal-right">
                                 <span className="modal-rarity">{selectedCard.rarity}</span>

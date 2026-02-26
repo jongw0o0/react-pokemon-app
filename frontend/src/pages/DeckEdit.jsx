@@ -48,13 +48,6 @@ const DeckEdit = ({ cardSeries }) => {
     const [allowedSubtypeIds, setAllowedSubtypeIds] = useState(null);
     const [displayCount, setDisplayCount] = useState(40);
 
-    const usedTypes = useMemo(() => {
-        const types = selectedCards
-            .filter(card => card.types && card.types.length > 0)
-            .flatMap(card => card.types);
-        return [...new Set(types)];
-    }, [selectedCards]);
-
     // 전체 카드 목록 로드
     useEffect(() => {
         const fetchPocketSummary = async () => {
@@ -173,9 +166,16 @@ const DeckEdit = ({ cardSeries }) => {
             }
             if (detailedData.types) {
                 setEnergies(prev => {
-                    // Set을 사용하여 기존 값과 새로운 값을 합치며 중복을 자동 제거
-                    const newEnergySet = new Set([...prev, ...detailedData.types]);
-                    return Array.from(newEnergySet);
+                    const currentDeckTypes = new Set(selectedCards.flatMap(c => c.types || []));
+                    
+                    const newTypes = detailedData.types.filter(t => 
+                        // 1. 기존 덱이나 목록에 없어야 함
+                        !currentDeckTypes.has(t) && !prev.includes(t) &&
+                        // 2. 무색(Colorless)과 드래곤(Dragon)은 에너지 목록에서 제외
+                        t !== "Colorless" && t !== "Dragon"
+                    );
+                    
+                    return [...prev, ...newTypes];
                 });
             }
             setSelectedCards([...selectedCards, detailedData]);
@@ -193,13 +193,45 @@ const DeckEdit = ({ cardSeries }) => {
         );
     };
 
+    const usedTypes = useMemo(() => {
+        const cardTypes = selectedCards
+            .filter(card => card.types && card.types.length > 0)
+            .flatMap(card => card.types);
+
+        const allRelevantTypes = [...cardTypes, ...energies];
+
+        const filteredTypes = allRelevantTypes.filter(
+            type => type !== "Colorless" && type !== "Dragon"
+        );
+
+        return [...new Set(filteredTypes)];
+    }, [selectedCards, energies]);
+
+    const handleAddManualEnergy = (type) => {
+        setEnergies(prev => {
+            if (prev.includes(type)) return prev;
+            return [...prev, type];
+        });
+    };
+
     const handleRemoveCard = (index) => setSelectedCards(selectedCards.filter((_, i) => i !== index));
 
     const handleUpdate = async () => {
-        if (selectedCards.length !== 20) { alert("20장을 모두 채워야 수정할 수 있습니다!"); return; }
+        if (selectedCards.length !== 20) {
+            alert("20장을 모두 채워야 저장할 수 있습니다!");
+            return;
+        }
+        
+        if (!deckName.trim()) {
+            alert("덱 이름을 입력해주세요.");
+            return;
+        }
+
+        const finalEnergies = Array.from(new Set(energies));
+
         const deckData = {
             deckName,
-            energies: energies,
+            energies: finalEnergies,
             deckComment,
             apiCardIds: selectedCards.map(card => card.id),
             representativeCardId,
@@ -226,24 +258,36 @@ const DeckEdit = ({ cardSeries }) => {
                     <div className="input-group">
                         <label>사용 에너지</label>
                         <div className="used-types-display interactive">
-                            {usedTypes.length > 0 ? (
-                                usedTypes.map(type => {
-                                    const isActive = energies.includes(type);
-                                    return (
+                            {usedTypes.map(type => {
+                                const isActive = energies.includes(type);
+                                return (
+                                    <button 
+                                        key={type} 
+                                        type="button"
+                                        className={`type-btn ${isActive ? 'active' : ''}`}
+                                        onClick={() => toggleEnergy(type)}
+                                    >
+                                        <span>{type}</span>
+                                    </button>
+                                );
+                            })}
+
+                            <div className="add-energy-dropdown">
+                                <button type="button" className="type-btn add-btn" title="에너지 직접 추가">
+                                    <span>+</span>
+                                </button>
+                                <div className="dropdown-content">
+                                    {TYPES.filter(t => t !== "Colorless" && t !== "Dragon" && !usedTypes.includes(t)).map(t => (
                                         <button 
-                                            key={type} 
-                                            type="button"
-                                            className={`type-btn ${isActive ? 'active' : ''}`}
-                                            onClick={() => toggleEnergy(type)}
-                                            title={isActive ? `${type} 사용 중` : `${type} 비활성화됨`}
+                                            key={t} 
+                                            type="button" 
+                                            onClick={() => handleAddManualEnergy(t)}
                                         >
-                                            <span>{type}</span>
+                                            {t}
                                         </button>
-                                    );
-                                })
-                            ) : (
-                                <span className="no-types"></span>
-                            )}
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
 

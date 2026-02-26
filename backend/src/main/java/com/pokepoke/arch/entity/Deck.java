@@ -65,6 +65,9 @@ public class Deck extends BaseEntity {
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DeckCard> deckCards = new ArrayList<>();
 
+    @org.hibernate.annotations.Formula("(SELECT COUNT(*) FROM deck_scraps ds WHERE ds.deck_id = deck_id)")
+    private Long scrapCount;
+
     private String isPublic = "Y";
 
     @Column(name = "is_deleted", nullable = false)

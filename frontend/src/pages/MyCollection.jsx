@@ -65,7 +65,7 @@ const MyCollection = () => {
                 <div className="collection-search-bar" style={{ marginTop: '20px' }}>
                     <input 
                         type="text" 
-                        placeholder="보유 중인 카드 이름 검색..." 
+                        placeholder="카드 이름 검색..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />

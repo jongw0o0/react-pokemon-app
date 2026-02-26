@@ -55,36 +55,128 @@
     font-weight: 800;
     margin: 0;
 }
-.scrap-btn {
-    background: none;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
+
+.action-buttons-group {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: 0.2s;
-    background: white;
+    gap: 12px;
 }
 
-.scrap-btn.active {
-    border-color: #ff7675;
-    background: #fff5f5;
+.scrap-btn, .like-btn {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 25px;
+    padding: 6px 14px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    filter: grayscale(100%);
+    opacity: 0.7;
 }
+
+.scrap-btn .count, .like-btn .count {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #636e72;
+}
+
+.like-btn.active {
+    filter: grayscale(0%);
+    opacity: 1;
+    border-color: #3498db;
+    background: #ebf5fb;
+}
+.like-btn.active .count { color: #3498db; }
+
+.scrap-btn.active {
+    filter: grayscale(0%);
+    opacity: 1;
+    border-color: #f1c40f;
+    background: #fef9e7;
+}
+.scrap-btn.active .count { color: #f39c12; }
+
+.scrap-btn:hover, .like-btn:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.views-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 8px;
+    color: #95a5a6;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.views-info .count {
+    color: #636e72;
+}
+
+
+.deck-header-energies {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.energy-badge {
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.energy-badge.grass { background-color: #78C850; }
+.energy-badge.fire { background-color: #F08030; }
+.energy-badge.water { background-color: #6890F0; }
+.energy-badge.lightning { background-color: #F8D030; color: #333; }
+.energy-badge.psychic { background-color: #F85888; }
+.energy-badge.fighting { background-color: #C03028; }
+.energy-badge.darkness { background-color: #705848; }
+.energy-badge.metal { background-color: #B8B8D0; color: #333; }
+.energy-badge.colorless { background-color: #A8A878; }
+.energy-badge.dragon { background-color: #7038F8; }
+
 .deck-detail-content {
     display: grid;
     grid-template-columns: 240px 1fr;
     gap: 20px;
     width: 100%;
 }
+
+.rep-card-link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
 .rep-card-img {
     width: 100%;
     max-width: 240px;
-    /* border-radius: 15px; */
+    display: block;
+    border-radius: 0 !important;
+    border: none !important;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+    transition: all 0.3s ease;
 }
+
+.rep-card-link:hover {
+    transform: translateY(-10px);
+}
+
 
 .representative-section {
     width: 280px;
@@ -116,17 +208,37 @@
     width: 100%;
     height: auto;
     display: block;
-    /* border-radius: 5px; */
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); 
+    border: none !important;
+    border-radius: 0;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    transition: transform 0.2s ease;
 }
-.card-wrapper {
-    background: none !important;
-    box-shadow: none !important;
+
+.grid-item img:hover {
+    transform: translateY(-5px);
 }
+
 .card-count-badge {
-    width: 18px;
-    height: 18px;
-    font-size: 0.7rem;
-    top: -3px;
-    right: -3px;
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(45, 52, 54, 0.9);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border: 1.5px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 2;
 }
+/* 
+.card-wrapper {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+} */

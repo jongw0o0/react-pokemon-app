@@ -110,6 +110,68 @@
     color: #000;
 }
 
+.type-btn.add-btn {
+    border: 2px dashed #ccc;
+    background: transparent;
+    color: #ccc;
+    font-size: 1.2rem;
+}
+
+.type-btn.add-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: #f0f7ff;
+}
+
+.add-energy-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    background-color: white;
+    min-width: 140px;
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+    z-index: 99999;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.dropdown-content::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 12px;
+    background: transparent;
+}
+
+.add-energy-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content button {
+    width: 100%;
+    padding: 8px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+
+.dropdown-content button:hover {
+    background-color: #f1f2f6;
+    color: var(--accent);
+}
+
 .count-display {
     margin: 20px 0;
     padding: 15px;
@@ -416,7 +478,7 @@ input:checked + .slider:before {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 10000;
 }
 
 /* 모달 컨텐츠 박스 */
@@ -424,7 +486,7 @@ input:checked + .slider:before {
     background: white;
     width: 90%;
     max-width: 1200px;
-    max-height: 85vh;
+    max-height: 80vh;
     border-radius: 30px;
     padding: 30px;
     display: flex;

@@ -27,6 +27,91 @@
     font-weight: 600;
 }
 
+.filter-section {
+    max-width: 1000px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.sort-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sort-chip {
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid #eee;
+    background: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #636e72;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sort-chip.active {
+    background: #3d7dca;
+    color: white;
+    border-color: #3d7dca;
+    box-shadow: 0 4px 12px rgba(61, 125, 202, 0.2);
+}
+
+.energy-filter-scroll {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 5px;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.energy-chip {
+    flex-shrink: 1;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.energy-chip .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #dfe6e9;
+}
+
+.energy-chip:hover {
+    background-color: #f8f9fa;
+    border-color: #3d7dca;
+}
+
+.energy-chip.active {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: #3d7dca;
+}
+
+.energy-chip.grass.active .dot { background: #78C850; }
+.energy-chip.fire.active .dot { background: #F08030; }
+.energy-badge.water.active .dot { background: #6890F0; }
+.energy-chip.multi.active {
+    background: linear-gradient(to right, #78C850, #F08030, #6890F0);
+    color: white;
+}
+
 .recipe-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -55,8 +140,8 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    background: #ffcb05; /* 포켓몬 골드 */
-    color: #3d7dca; /* 포켓몬 블루 */
+    background: #ffcb05;
+    color: #3d7dca;
     padding: 4px 10px;
     border-radius: 10px;
     font-weight: bold;
@@ -79,10 +164,29 @@
     margin-bottom: 15px;
 }
 
-.deck-comment {
-    color: #7f8c8d;
-    line-height: 1.5;
-    font-size: 0.95rem;
+.deck-stats-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f1f2f6; /* 작성자 이름과 구분선 */
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #636e72;
+}
+
+.stat-icon {
+    font-size: 0.9rem;
+}
+
+.recipe-card:hover .stat-item {
+    color: #2d3436;
 }
 
 .recipe-footer {
@@ -100,29 +204,124 @@
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
-    /* transition: background 0.2s; */
 }
 
 .detail-btn:hover {
     background: #3366aa;
 }
 .card-image-container {
+    position: relative;
     width: 100%;
-    background: #f0f0f0; /* 이미지가 로딩되기 전이나 없을 때 보일 배경색 */
+    background: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 0; /* 위아래 여백 */
+    padding: 20px 0;
+    transition: background-color 0.3s ease;
 }
 
+.bg-grass { background: linear-gradient(135deg, #78C850 0%, #a8e08e 100%); }
+.bg-fire { background: linear-gradient(135deg, #F08030 0%, #fab180 100%); }
+.bg-water { background: linear-gradient(135deg, #6890F0 0%, #a0bdf8 100%); }
+.bg-lightning { background: linear-gradient(135deg, #F8D030 0%, #fbe485 100%); }
+.bg-psychic { background: linear-gradient(135deg, #F85888 0%, #fba0bc 100%); }
+.bg-fighting { background: linear-gradient(135deg, #C03028 0%, #e07a74 100%); }
+.bg-darkness { background: linear-gradient(135deg, #705848 0%, #a38c7d 100%); }
+.bg-metal { background: linear-gradient(135deg, #B8B8D0 0%, #d8d8e5 100%); }
+.bg-colorless { background: linear-gradient(135deg, #A8A878 0%, #cfcfb4 100%); }
+.bg-dragon { background: linear-gradient(135deg, #7038F8 0%, #a684fb 100%); }
+.bg-default { background: #f0f0f0; }
+.bg-multi {
+    background: linear-gradient(
+        135deg, 
+        #78C850 0%,
+        #F08030 20%,
+        #6890F0 40%,
+        #F8D030 60%,
+        #F85888 80%,
+        #C03028 100%
+    );
+    background-size: 200% 200%;
+}
+
+.card-energies-mini {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    display: flex;
+    gap: 4px;
+}
+
+.mini-badge {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.mini-badge.grass { background: #78C850; }
+.mini-badge.fire { background: #F08030; }
+.mini-badge.water { background: #6890F0; }
+.mini-badge.lightning { background: #F8D030; }
+.mini-badge.psychic { background: #F85888; }
+.mini-badge.fighting { background: #C03028; }
+.mini-badge.darkness { background: #705848; }
+.mini-badge.metal { background: #B8B8D0; }
+.mini-badge.colorless { background: #A8A878; }
+.mini-badge.dragon { background: #7038F8; }
+
 .deck-thumb {
-    width: 150px; /* 가로 크기를 150px 정도로 고정 (취향껏 조절) */
-    aspect-ratio: 2.5 / 3.5; /* 포켓몬 카드 표준 비율 */
+    width: 150px;
+    aspect-ratio: 2.5 / 3.5;
     object-fit: contain;
-    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); /* 카드에 입체감 주기 */
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
     transition: transform 0.3s ease;
 }
 
 .recipe-card:hover .deck-thumb {
-    transform: scale(1.05) rotate(2deg); /* 마우스 올리면 살짝 커지면서 회전 */
+    transform: scale(1.05) rotate(2deg);
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 24px;
+    border: 2px dashed #eee;
+    margin-top: 20px;
+}
+
+.no-results-icon {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.no-results h3 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.no-results p {
+    color: #95a5a6;
+    margin-bottom: 25px;
+}
+
+.reset-filter-btn {
+    padding: 10px 25px;
+    background: #f1f2f6;
+    border: 1px solid #dfe6e9;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #3d7dca;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.reset-filter-btn:hover {
+    background: #3d7dca;
+    color: white;
+    transform: translateY(-2px);
 }

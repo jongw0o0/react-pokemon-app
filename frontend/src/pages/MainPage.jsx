@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import TCGdex, { Query } from "@tcgdex/sdk";
 import '../css/MainPage.css'
+import { handleImageError } from '../utils/imageHelper';
 
 const MainPage = ({seriesData}) => {
     const [randCards, setRandCard] = useState([]);
@@ -45,7 +46,7 @@ const MainPage = ({seriesData}) => {
                     <span className="count">{total.toLocaleString()}</span> 종류의 카드를 
                     <span className="brand-name"> PokeArch</span>에서 만나보세요
                 </h1>
-                <p className="subtitle">subtitle</p>
+                <p className="subtitle">카드 조회, 덱 생성 및 공유, 다양한 카드 검색 필터까지</p>
             </header>
             <div className="slider-container">
                 <div className="imageSlides">
@@ -55,7 +56,7 @@ const MainPage = ({seriesData}) => {
                             <div className="card-wrapper">
                                 <Link to={`/card/${randCard.id}`}>
                                     <div className="shine-effect"></div>
-                                    <img src={`${randCard.image}/high.webp`} alt={randCard.name} loading="lazy" />
+                                    <img src={`${randCard.image}/high.webp`} alt={randCard.name} loading="lazy" onError={handleImageError}/>
                                 </Link>
                             </div>
                         </div>
